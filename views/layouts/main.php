@@ -34,10 +34,14 @@ LteIE9Asset::register($this);
 
 <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
     <div class="row">
-        <ol class="breadcrumb">
-            <li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
-            <li class="active">Icons</li>
-        </ol>
+        <?= Breadcrumbs::widget([
+            'encodeLabels' => false,
+            'homeLink' => [
+                'label' => '<svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg>',
+                'url' => Yii::$app->homeUrl,
+            ],
+            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+        ]) ?>
     </div>
 
     <div class="row">
