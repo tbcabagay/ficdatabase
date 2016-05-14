@@ -14,6 +14,17 @@ use app\assets\LteIE9Asset;
 LuminoAsset::register($this);
 GlyphAsset::register($this);
 LteIE9Asset::register($this);
+
+$this->registerJs("
+    !function ($) {
+        $(window).on('resize', function () {
+            if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+        });
+        $(window).on('resize', function () {
+            if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+        });
+    } (window.jQuery);
+");
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -44,9 +55,7 @@ LteIE9Asset::register($this);
         ]) ?>
     </div>
 
-    <div class="row">
-        <?= $content; ?>
-    </div>
+    <?= $content; ?>
 </div>
 
 <?php $this->endBody() ?>
