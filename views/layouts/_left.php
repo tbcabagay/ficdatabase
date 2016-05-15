@@ -8,13 +8,23 @@ use yii\bootstrap\Nav;
         'encodeLabels' => false,
         'items' => [
             [
-                'label' => '<svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg>User',
+                'label' => 'Designation',
+                'url' => ['/main/designation/index'],
+            ],
+            [
+                'label' => 'Faculty',
+                'url' => ['/main/faculty/index'],
+            ],
+            '<li role="presentation" class="divider"></li>',
+            [
+                'label' => 'User',
                 'url' => ['/main/user/index'],
             ],
             [
-                'label' => '<svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg>Office',
+                'label' => 'Office',
                 'url' => ['/main/office/index'],
             ],
+
         ],
         'options' => ['class' => 'menu'],
     ]);
