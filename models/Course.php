@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%course}}".
@@ -17,6 +18,7 @@ use Yii;
  */
 class Course extends \yii\db\ActiveRecord
 {
+    private static $_listCourse;
     /**
      * @inheritdoc
      */
@@ -33,6 +35,7 @@ class Course extends \yii\db\ActiveRecord
         return [
             [['program_id', 'code', 'title'], 'required'],
             [['program_id'], 'integer'],
+            [['code'], 'unique'],
             [['code'], 'string', 'max' => 20],
             [['title'], 'string', 'max' => 150],
             [['program_id'], 'exist', 'skipOnError' => true, 'targetClass' => Program::className(), 'targetAttribute' => ['program_id' => 'id']],
@@ -66,5 +69,33 @@ class Course extends \yii\db\ActiveRecord
     public function getFacultycourses()
     {
         return $this->hasMany(Facultycourse::className(), ['course_id' => 'id']);
+    }
+
+    public static function getListCourse()
+    {
+        self::$_listCourse = ArrayHelper::map(self::find()->all(), 'id', 'code');
+        return self::$_listCourse;
+    }
+
+    public static function getCheckboxListCourse()
+    {
+        $courses = [];
+        $programs = Program::find()->select(['id', 'name', 'code'])->asArray()->all();
+
+        foreach ($programs as $program) {
+            $courses = ArrayHelper::map(self::find()->where(['program_id' => $program['id']])->all(),
+                'id',
+                function($model, $defaultValue) {
+                    return $model->code . ' - ' . $model->title;
+                }
+            );
+            if (!empty($courses)) {
+                self::$_listCourse[] = [
+                    'program' => $program['name'] . ' (' . $program['code'] . ')',
+                    'courses' => $courses,
+                ];
+            }
+        }
+        return self::$_listCourse;
     }
 }

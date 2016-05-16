@@ -15,7 +15,7 @@ $this->registerJs("
     !function ($) {
         var addCourses = $('#add-courses');
         var grid = $('#w0');
-        var url = '" . Url::to(['/main/faculty/update']) . "';
+        var url = '" . Url::to(['/main/facultycourse/create']) . "';
         addCourses.hide();
         
         grid.on('grid.radiochecked', function(ev, key, val) {
@@ -68,9 +68,9 @@ $this->registerJs("
                 'pjax' => true,
                 'toolbar' => [
                     ['content' =>
-                         Html::a('<i class="glyphicon glyphicon-plus"></i> Add', ['create'],['title' => Yii::t('app', 'Add'), 'class' => 'btn btn-success',]) . ' '.
-                         Html::a('<i class="glyphicon glyphicon-book"></i> Courses', '#',['title' => Yii::t('app', 'Add'), 'class' => 'btn btn-primary', 'id' => 'add-courses']) . ' '.
-                         Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('app', 'Reset Grid')])
+                        Html::a('<i class="glyphicon glyphicon-plus"></i> Add', ['create'],['title' => Yii::t('app', 'Add'), 'class' => 'btn btn-success',]) . ' '.
+                        Html::a('<i class="glyphicon glyphicon-book"></i> Courses', '#',['title' => Yii::t('app', 'Add'), 'class' => 'btn btn-primary', 'id' => 'add-courses']) . ' '.
+                        Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('app', 'Reset Grid')])
                     ],
                     '{toggleData}',
                 ],

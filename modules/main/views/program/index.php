@@ -4,16 +4,15 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
 
-use app\models\User;
 use app\models\Office;
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\UserSearch */
+/* @var $searchModel app\models\ProgramSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Users');
+$this->title = Yii::t('app', 'Programs');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-index">
+<div class="program-index">
 
     <div class="row">
         <div class="col-lg-12">
@@ -29,35 +28,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
 
-                    'email:email',
                     [
                         'attribute' => 'office_id',
                         'value' => 'office.code',
                         'filter' => Office::getListOffice(),
                     ],
-                    [
-                        'hAlign' => 'center',
-                        'format' => 'html',
-                        'attribute' => 'status',
-                        'value' => function ($model, $key, $index, $column) {
-                            $display = '';
-                            if ($model->status === User::STATUS_ACTIVE) {
-                                $display = '<span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>';
-                            } else if ($model->status === User::STATUS_DELETE) {
-                                $display = '<span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span>';
-                            }
-                            return $display;
-                        },
-                        'filter' => User::getListStatus(),
-                    ],
-                    [
-                        'attribute' => 'created_at',
-                        'filter' => false,
-                    ],
-                    [
-                        'attribute' => 'updated_at',
-                        'filter' => false,
-                    ],
+                    'code',
+                    'name',
 
                     ['class' => 'yii\grid\ActionColumn'],
                 ],
@@ -71,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'panel' => [
                     'type' => GridView::TYPE_PRIMARY,
-                    'heading' => 'User Grid'
+                    'heading' => 'Program Grid'
                 ],
             ]); ?>
         <?php Pjax::end(); ?>

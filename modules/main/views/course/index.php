@@ -3,14 +3,16 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
+
+use app\models\Program;
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\OfficeSearch */
+/* @var $searchModel app\models\CourseSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Offices');
+$this->title = Yii::t('app', 'Courses');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="office-index">
+<div class="course-index">
 
     <div class="row">
         <div class="col-lg-12">
@@ -26,8 +28,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
 
+                    [
+                        'attribute' => 'program_id',
+                        'value' => 'program.code',
+                        'filter' => Program::getListProgram(),
+                    ],
                     'code',
-                    'name',
+                    'title',
 
                     ['class' => 'yii\grid\ActionColumn'],
                 ],
@@ -41,10 +48,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'panel' => [
                     'type' => GridView::TYPE_PRIMARY,
-                    'heading' => 'Office Grid'
+                    'heading' => 'Course Grid'
                 ],
             ]); ?>
         <?php Pjax::end(); ?>
         </div>
     </div>
+
 </div>

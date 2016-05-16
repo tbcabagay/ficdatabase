@@ -8,6 +8,14 @@ use yii\bootstrap\Nav;
         'encodeLabels' => false,
         'items' => [
             [
+                'label' => 'Program',
+                'url' => ['/main/program/index'],
+            ],
+            [
+                'label' => 'Course',
+                'url' => ['/main/course/index'],
+            ],
+            [
                 'label' => 'Designation',
                 'url' => ['/main/designation/index'],
             ],

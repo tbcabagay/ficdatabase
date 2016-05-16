@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%program}}".
@@ -17,6 +18,7 @@ use Yii;
  */
 class Program extends \yii\db\ActiveRecord
 {
+    private static $_listProgram;
     /**
      * @inheritdoc
      */
@@ -33,6 +35,7 @@ class Program extends \yii\db\ActiveRecord
         return [
             [['office_id', 'code', 'name'], 'required'],
             [['office_id'], 'integer'],
+            [['code'], 'unique'],
             [['code'], 'string', 'max' => 20],
             [['name'], 'string', 'max' => 150],
             [['office_id'], 'exist', 'skipOnError' => true, 'targetClass' => Office::className(), 'targetAttribute' => ['office_id' => 'id']],
@@ -66,5 +69,11 @@ class Program extends \yii\db\ActiveRecord
     public function getOffice()
     {
         return $this->hasOne(Office::className(), ['id' => 'office_id']);
+    }
+
+    public static function getListProgram()
+    {
+        self::$_listProgram = ArrayHelper::map(self::find()->all(), 'id', 'code');
+        return self::$_listProgram;
     }
 }

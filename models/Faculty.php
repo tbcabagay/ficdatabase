@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%faculty}}".
@@ -23,6 +24,8 @@ use yii\db\Expression;
  */
 class Faculty extends \yii\db\ActiveRecord
 {
+    private static $_listFaculty;
+
     const STATUS_ACTIVE = 10;
     const STATUS_DELETE = 20;
     /**
@@ -109,5 +112,11 @@ class Faculty extends \yii\db\ActiveRecord
             }
         }
         return false;
+    }
+
+    public static function getListFaculty()
+    {
+        self::$_listFaculty = ArrayHelper::map(self::find()->all(), 'id', 'last_name');
+        return self::$_listFaculty;
     }
 }
