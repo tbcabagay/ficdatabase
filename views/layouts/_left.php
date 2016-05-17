@@ -8,6 +8,11 @@ use yii\bootstrap\Nav;
         'encodeLabels' => false,
         'items' => [
             [
+                'label' => 'Template',
+                'url' => ['/main/template/index'],
+            ],
+            '<li role="presentation" class="divider"></li>',
+            [
                 'label' => 'Program',
                 'url' => ['/main/program/index'],
             ],

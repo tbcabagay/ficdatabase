@@ -74,6 +74,16 @@ class m160513_161908_init extends Migration
             'course_id' => $this->integer()->notNull(),
         ]);
 
+        /* Template table */
+        $this->createTable('{{%template}}', [
+            'id' => $this->primaryKey(),
+            'user_id' => $this->integer()->notNull(),
+            'name' => $this->string(50)->notNull(),
+            'content' => $this->text(),
+            'created_at' => $this->dateTime()->notNull(),
+            'updated_at' => $this->dateTime(),
+        ]);
+
         $this->addForeignKey('fk-user-office_id-office-id', '{{%user}}', 'office_id', '{{%office}}', 'id', 'RESTRICT', 'CASCADE');
         $this->addForeignKey('fk-auth-user_id-user-id', '{{%auth}}', 'user_id', '{{%user}}', 'id', 'RESTRICT', 'CASCADE');
         $this->addForeignKey('fk-faculty-designation_id-designation-id', '{{%faculty}}', 'designation_id', '{{%designation}}', 'id', 'RESTRICT', 'CASCADE');
@@ -82,6 +92,7 @@ class m160513_161908_init extends Migration
             RESTRICT', 'CASCADE');
         $this->addForeignKey('fk-facultycourse-faculty_id-faculty-id', '{{%facultycourse}}', 'faculty_id', '{{%faculty}}', 'id', 'RESTRICT', 'CASCADE');
         $this->addForeignKey('fk-facultycourse-course_id-course-id', '{{%facultycourse}}', 'course_id', '{{%course}}', 'id', 'RESTRICT', 'CASCADE');
+        $this->addForeignKey('fk-template-user_id-user-id', '{{%template}}', 'user_id', '{{%user}}', 'id', 'RESTRICT', 'CASCADE');
     }
 
     public function down()
@@ -93,6 +104,7 @@ class m160513_161908_init extends Migration
         $this->dropForeignKey('fk-course-program_id-program-id', '{{%course}}');
         $this->dropForeignKey('fk-facultycourse-faculty_id-faculty-id', '{{%facultycourse}}');
         $this->dropForeignKey('fk-facultycourse-course_id-course-id', '{{%facultycourse}}');
+        $this->dropForeignKey('fk-template-user_id-user-id', '{{%template}}');
 
         $this->dropTable('{{%office}}');
         $this->dropTable('{{%auth}}');
@@ -102,17 +114,6 @@ class m160513_161908_init extends Migration
         $this->dropTable('{{%program}}');
         $this->dropTable('{{%course}}');
         $this->dropTable('{{%facultycourse}}');
-
+        $this->dropTable('{{%template}}');
     }
-
-    /*
-    // Use safeUp/safeDown to run migration code within a transaction
-    public function safeUp()
-    {
-    }
-
-    public function safeDown()
-    {
-    }
-    */
 }
