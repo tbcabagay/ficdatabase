@@ -58,6 +58,10 @@ $config = [
         ],
         'pdf' => [
             'class' => Pdf::classname(),
+            'marginLeft' => 25.4,
+            'marginRight' => 25.4,
+            'marginTop' => 12.7,
+            'marginBottom' => 15.24,
             'format' => Pdf::FORMAT_A4,
             'orientation' => Pdf::ORIENT_PORTRAIT,
             'destination' => Pdf::DEST_BROWSER,

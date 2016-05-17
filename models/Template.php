@@ -90,6 +90,13 @@ class Template extends \yii\db\ActiveRecord
         $model = self::find()->select(['content'])->where(['id' => $id])->limit(1)->one();
         if ($model !== null) {
             $pdf = Yii::$app->pdf;
+            $mpdf = $pdf->getApi();
+            $mpdf->defaultfooterfontsize = 8;
+            $mpdf->defaultfooterfontstyle = 'B';
+            $mpdf->SetFooter('3rd Floor, UPOU Main Building, Los Ba&ntilde;os, Laguna, Philippines - Telefax: (6349)5366010 or 5366001 to 06 ext 821, 333, 332 fmds@upou.edu.ph - www.upou.edu.ph');
+            //var_dump($mpdf->defaultfooterfontsize);
+            //exit();
+
             $pdf->content = $model->content;
             return $pdf->render();
         } else {
