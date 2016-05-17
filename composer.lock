@@ -318,12 +318,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-grid.git",
-                "reference": "1fdff28ff504b0ee9074c68e44a9a740e1504078"
+                "reference": "2f39c05ec05b39452e818c2c49d1d1cee5f51771"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/1fdff28ff504b0ee9074c68e44a9a740e1504078",
-                "reference": "1fdff28ff504b0ee9074c68e44a9a740e1504078",
+                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/2f39c05ec05b39452e818c2c49d1d1cee5f51771",
+                "reference": "2f39c05ec05b39452e818c2c49d1d1cee5f51771",
                 "shasum": ""
             },
             "require": {
@@ -359,7 +359,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2016-05-13 17:22:20"
+            "time": "2016-05-15 18:54:47"
         },
         {
             "name": "kartik-v/yii2-krajee-base",
@@ -777,12 +777,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "2f4342f06ddedc20afb4ea8c79a672ec47c4aaa1"
+                "reference": "5ed762ebf18945ef3282d0910d1a8b03603c7a7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/2f4342f06ddedc20afb4ea8c79a672ec47c4aaa1",
-                "reference": "2f4342f06ddedc20afb4ea8c79a672ec47c4aaa1",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/5ed762ebf18945ef3282d0910d1a8b03603c7a7b",
+                "reference": "5ed762ebf18945ef3282d0910d1a8b03603c7a7b",
                 "shasum": ""
             },
             "require": {
@@ -863,7 +863,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2016-05-13 14:29:25"
+            "time": "2016-05-15 22:11:47"
         },
         {
             "name": "yiisoft/yii2-authclient",

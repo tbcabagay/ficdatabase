@@ -15,7 +15,7 @@ $this->registerJs("
     !function ($) {
         var addCourses = $('#add-courses');
         var grid = $('#w0');
-        var url = '" . Url::to(['/main/facultycourse/create']) . "';
+        var url = '" . Url::to(['/main/facultycourse/bulk-create']) . "';
         addCourses.hide();
         
         grid.on('grid.radiochecked', function(ev, key, val) {

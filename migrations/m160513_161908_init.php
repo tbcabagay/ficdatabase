@@ -70,10 +70,8 @@ class m160513_161908_init extends Migration
 
         /* Facultycourse table */
         $this->createTable('{{%facultycourse}}', [
-            'id' => $this->primaryKey(),
             'faculty_id' => $this->integer()->notNull(),
             'course_id' => $this->integer()->notNull(),
-            'status' => $this->smallInteger(150)->notNull(),
         ]);
 
         $this->addForeignKey('fk-user-office_id-office-id', '{{%user}}', 'office_id', '{{%office}}', 'id', 'RESTRICT', 'CASCADE');

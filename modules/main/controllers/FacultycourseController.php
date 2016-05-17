@@ -10,7 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 use app\models\Faculty;
-use app\models\Course;
+use app\models\Program;
+use app\models\CourseSearch;
 
 /**
  * FacultycourseController implements the CRUD actions for Facultycourse model.
@@ -32,98 +33,46 @@ class FacultycourseController extends Controller
         ];
     }
 
-    /**
-     * Lists all Facultycourse models.
-     * @return mixed
-     */
-    public function actionIndex()
+    public function actionBulkCreate($id)
     {
-        $searchModel = new FacultycourseSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single Facultycourse model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Facultycourse model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Facultycourse();
-
-        if ($model->load(Yii::$app->request->post()) && $model->add()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-                'faculties' => Faculty::getListFaculty(),
-                'courses' => Course::getCheckboxListCourse(),
-            ]);
-        }
-    }
-
-    /**
-     * Updates an existing Facultycourse model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Deletes an existing Facultycourse model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Facultycourse model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Facultycourse the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Facultycourse::findOne($id)) !== null) {
-            return $model;
-        } else {
+        $faculty = Faculty::findOne($id);
+        if ($faculty === null) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+
+        $assignedCourses = Facultycourse::getAssignedCourses($id);
+        $programs = Program::getListProgram();
+
+        $searchModel = new CourseSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->pagination->pageSize = 10;
+
+        if (Yii::$app->request->isPost) {
+            $result = true;
+            $selections = \Yii::$app->request->post('selection');
+
+            Facultycourse::deleteCourse($id);
+
+            foreach ($selections as $selection) {
+                $model = new Facultycourse([
+                    'faculty_id' => $id,
+                    'course_id' => $selection,
+                ]);
+                $result = $result && $model->save();
+            }
+            if ($result) {
+                $this->refresh();
+            } else {
+                throw new BadRequestHttpException('There is a problem with you request. Please try again');
+            }
+        }
+
+        return $this->render('bulk-create', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'assignedCourses' => $assignedCourses,
+            'faculty' => $faculty,
+            'programs' => $programs,
+        ]);
     }
 }
