@@ -75,6 +75,19 @@ class Facultycourse extends \yii\db\ActiveRecord
         return self::$_assignedCourse;
     }
 
+    public static function getCheckboxAssignedCourses($faculty_id)
+    {
+        self::$_assignedCourse = ArrayHelper::map(self::find()->where(['faculty_id' => $faculty_id])->all(),
+            function($model, $defaultValue) {
+                return $model->course->id;
+            },
+            function($model, $defaultValue) {
+                return $model->course->code . ' - ' . $model->course->title;
+            }
+        );
+        return self::$_assignedCourse;
+    }
+
     public static function deleteCourse($faculty_id)
     {
         self::deleteAll(['faculty_id' => $faculty_id]);

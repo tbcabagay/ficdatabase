@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\db\Expression;
 use yii\web\NotFoundHttpException;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%template}}".
@@ -17,9 +18,11 @@ use yii\web\NotFoundHttpException;
  * @property string $updated_at
  *
  * @property User $user
+ * @property Notice[] $notices
  */
 class Template extends \yii\db\ActiveRecord
 {
+    private static $_listTemplate;
     /**
      * @inheritdoc
      */
@@ -66,10 +69,19 @@ class Template extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNotices() 
+    { 
+        return $this->hasMany(Notice::className(), ['template_id' => 'id']); 
+    }
+
     public function add()
     {
         if ($this->isNewRecord) {
-            $this->user_id = 1;
+            $identity = \Yii::$app->user->identity;
+            $this->user_id = $identity->id;
             $this->created_at = new Expression('NOW()');
 
             if ($this->save()) {
@@ -94,13 +106,19 @@ class Template extends \yii\db\ActiveRecord
             $mpdf->defaultfooterfontsize = 8;
             $mpdf->defaultfooterfontstyle = 'B';
             $mpdf->SetFooter('3rd Floor, UPOU Main Building, Los Ba&ntilde;os, Laguna, Philippines - Telefax: (6349)5366010 or 5366001 to 06 ext 821, 333, 332 fmds@upou.edu.ph - www.upou.edu.ph');
-            //var_dump($mpdf->defaultfooterfontsize);
-            //exit();
 
             $pdf->content = $model->content;
             return $pdf->render();
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public static function getListTemplate()
+    {
+        $identity = \Yii::$app->user->identity;
+        $user = User::findOne($identity->id);
+        self::$_listTemplate = ArrayHelper::map($user->getTemplates()->all(), 'id', 'name');
+        return self::$_listTemplate;
     }
 }

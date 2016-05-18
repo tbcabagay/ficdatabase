@@ -14,16 +14,24 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerJs("
     !function ($) {
         var addCourses = $('#add-courses');
+        var addNotices = $('#add-notices');
         var grid = $('#w0');
-        var url = '" . Url::to(['/main/facultycourse/bulk-create']) . "';
+        var addCoursesUrl = '" . Url::to(['/main/facultycourse/bulk-create']) . "';
+        var addNoticesUrl = '" . Url::to(['/main/notice/create']) . "';
         addCourses.hide();
+        addNotices.hide();
         
         grid.on('grid.radiochecked', function(ev, key, val) {
             addCourses.show();
-            addCourses.attr('href', url + '?id=' + val);
+            addNotices.show();
+            addCourses.attr('href', addCoursesUrl + '?id=' + val);
+            addNotices.attr('href', addNoticesUrl + '?id=' + val);
         });
         grid.on('grid.radiocleared', function(ev, key, val) {
             addCourses.hide();
+            addNotices.hide();
+            addCourses.attr('href', addCoursesUrl + '?id=' + val);
+            addNotices.attr('href', addNoticesUrl + '?id=' + val);
         });
     } (window.jQuery);
 ");
@@ -69,7 +77,8 @@ $this->registerJs("
                 'toolbar' => [
                     ['content' =>
                         Html::a('<i class="glyphicon glyphicon-plus"></i> Add', ['create'],['title' => Yii::t('app', 'Add'), 'class' => 'btn btn-success',]) . ' '.
-                        Html::a('<i class="glyphicon glyphicon-book"></i> Courses', '#',['title' => Yii::t('app', 'Add'), 'class' => 'btn btn-primary', 'id' => 'add-courses']) . ' '.
+                        Html::a('<i class="glyphicon glyphicon-book"></i> Courses', '#',['title' => Yii::t('app', 'Add Courses'), 'class' => 'btn btn-primary', 'id' => 'add-courses']) . ' '.
+                        Html::a('<i class="glyphicon glyphicon-file"></i> Notices', '#',['title' => Yii::t('app', 'Add Notices'), 'class' => 'btn btn-warning', 'id' => 'add-notices']) . ' '.
                         Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('app', 'Reset Grid')])
                     ],
                     '{toggleData}',

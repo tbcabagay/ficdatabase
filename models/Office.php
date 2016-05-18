@@ -12,6 +12,7 @@ use yii\helpers\ArrayHelper;
  * @property string $code
  * @property string $name
  *
+ * @property Program[] $programs
  * @property User[] $users
  */
 class Office extends \yii\db\ActiveRecord
@@ -47,6 +48,14 @@ class Office extends \yii\db\ActiveRecord
             'code' => Yii::t('app', 'Code'),
             'name' => Yii::t('app', 'Name'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPrograms() 
+    { 
+        return $this->hasMany(Program::className(), ['office_id' => 'id']); 
     }
 
     /**

@@ -23,7 +23,10 @@
         "kartik-v/yii2-mpdf": "@dev",
         "kartik-v/yii2-widget-activeform": "@dev",
         "kartik-v/yii2-widget-growl": "*",
-        "kartik-v/yii2-widget-select2": "@dev"
+        "kartik-v/yii2-widget-select2": "@dev",
+        "kartik-v/yii2-widget-datepicker": "@dev",
+        "bower-asset/nprogress" : ">=0.2.0"
+
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

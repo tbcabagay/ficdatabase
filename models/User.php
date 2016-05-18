@@ -18,6 +18,8 @@ use yii\web\IdentityInterface;
  * @property string $updated_at
  *
  * @property Auth[] $auths
+ * @property Notice[] $notices
+ * @property Template[] $templates
  * @property Office $office
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
@@ -120,6 +122,22 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function getAuths()
     {
         return $this->hasMany(Auth::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNotices()
+    {
+        return $this->hasMany(Notice::className(), ['user_id' => 'id']);
+    }
+ 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTemplates() 
+    { 
+        return $this->hasMany(Template::className(), ['user_id' => 'id']); 
     }
 
     /**

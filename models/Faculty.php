@@ -21,6 +21,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property Designation $designation
  * @property Facultycourse[] $facultycourses
+ * @property Notice[] $notices
  */
 class Faculty extends \yii\db\ActiveRecord
 {
@@ -86,6 +87,14 @@ class Faculty extends \yii\db\ActiveRecord
     public function getFacultycourses()
     {
         return $this->hasMany(Facultycourse::className(), ['faculty_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNotices()
+    {
+        return $this->hasMany(Notice::className(), ['faculty_id' => 'id']);
     }
 
     public function validateEmailDomain($attribute, $params)
