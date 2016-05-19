@@ -90,14 +90,22 @@ class m160513_161908_init extends Migration
             'user_id' => $this->integer()->notNull(),
             'faculty_id' => $this->integer()->notNull(),
             'template_id' => $this->integer()->notNull(),
-            'course_id' => $this->integer()->notNull(),
-            'reference_number' => $this->string(7)->notNull(),
             'semester' => $this->char(1)->notNull(),
             'academic_year' => $this->char(9)->notNull(),
             'date_course_start' => $this->date()->notNull(),
             'date_final_exam' => $this->date()->notNull(),
             'date_submission' => $this->date()->notNull(),
-            'created_at' => $this->dateTime()->notNull(),
+            'reference_number' => $this->string(7)->notNull(),
+        ]);
+
+        /* Storage table */
+        $this->createTable('{{%storage}}', [
+            'id' => $this->bigPrimaryKey(),
+            'notice_id' => $this->bigInteger()->notNull(),
+            'course_id' => $this->integer()->notNull(),
+            'status' => $this->smallInteger()->notNull(),
+            'location' => $this->string(500)->notNull(),
+            'created_at' => $this->dateTime()->notNull(),           
         ]);
 
         $this->addForeignKey('fk-user-office_id-office-id', '{{%user}}', 'office_id', '{{%office}}', 'id', 'RESTRICT', 'CASCADE');
@@ -112,7 +120,8 @@ class m160513_161908_init extends Migration
         $this->addForeignKey('fk-notice-user_id-user-id', '{{%notice}}', 'user_id', '{{%user}}', 'id', 'RESTRICT', 'CASCADE');
         $this->addForeignKey('fk-notice-faculty_id-faculty-id', '{{%notice}}', 'faculty_id', '{{%faculty}}', 'id', 'RESTRICT', 'CASCADE');
         $this->addForeignKey('fk-notice-template_id-template-id', '{{%notice}}', 'template_id', '{{%template}}', 'id', 'RESTRICT', 'CASCADE');
-        $this->addForeignKey('fk-notice-course_id-course-id', '{{%notice}}', 'course_id', '{{%course}}', 'id', 'RESTRICT', 'CASCADE');
+        $this->addForeignKey('fk-storage-notice_id-notice-id', '{{%storage}}', 'notice_id', '{{%notice}}', 'id', 'RESTRICT', 'CASCADE');
+        $this->addForeignKey('fk-storage-course_id-course-id', '{{%storage}}', 'course_id', '{{%course}}', 'id', 'RESTRICT', 'CASCADE');
     }
 
     public function down()
@@ -129,6 +138,8 @@ class m160513_161908_init extends Migration
         $this->dropForeignKey('fk-notice-faculty_id-faculty-id', '{{%notice}}');
         $this->dropForeignKey('fk-notice-template_id-template-id', '{{%notice}}');
         $this->dropForeignKey('fk-notice-course_id-course-id', '{{%notice}}');
+        $this->dropForeignKey('fk-storage-notice_id-notice-id', '{{%storage}}');
+        $this->dropForeignKey('fk-storage-course_id-course-id', '{{%storage}}');
 
         $this->dropTable('{{%office}}');
         $this->dropTable('{{%auth}}');
@@ -140,5 +151,6 @@ class m160513_161908_init extends Migration
         $this->dropTable('{{%facultycourse}}');
         $this->dropTable('{{%template}}');
         $this->dropTable('{{%notice}}');
+        $this->dropTable('{{%storage}}');
     }
 }

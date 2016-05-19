@@ -32,14 +32,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'user_id',
             'faculty_id',
             'template_id',
-            'course_id',
-            'reference_number',
             'semester',
             'academic_year',
             'date_course_start',
             'date_final_exam',
             'date_submission',
-            'created_at',
+            'reference_number',
         ],
     ]) ?>
 

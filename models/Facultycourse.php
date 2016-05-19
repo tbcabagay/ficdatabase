@@ -27,6 +27,11 @@ class Facultycourse extends \yii\db\ActiveRecord
         return '{{%facultycourse}}';
     }
 
+    public static function primaryKey()
+    {
+        return ['course_id'];
+    }
+
     /**
      * @inheritdoc
      */
@@ -68,23 +73,32 @@ class Facultycourse extends \yii\db\ActiveRecord
         return $this->hasOne(Faculty::className(), ['id' => 'faculty_id']);
     }
 
-    public static function getAssignedCourses($faculty_id)
+    public static function getColumnAssignedCourses($faculty_id)
     {
         $model = self::find()->select('course_id')->where(['faculty_id' => $faculty_id])->asArray()->all();
         self::$_assignedCourse = ArrayHelper::getColumn($model, 'course_id');
         return self::$_assignedCourse;
     }
 
-    public static function getCheckboxAssignedCourses($faculty_id)
+    public static function getListAssignedCourses($faculty_id)
     {
-        self::$_assignedCourse = ArrayHelper::map(self::find()->where(['faculty_id' => $faculty_id])->all(),
-            function($model, $defaultValue) {
-                return $model->course->id;
-            },
-            function($model, $defaultValue) {
-                return $model->course->code . ' - ' . $model->course->title;
+        self::$_assignedCourse = [];
+        $courses = [];
+
+        $courses = self::find()->joinWith('course')->where(['faculty_id' => $faculty_id])->orderBy('course.title ASC')->all();
+        if (!empty($courses)) {
+            foreach ($courses as $course) {
+                $programId = $course->course->program->name;
+                $courseId = $course->course->id;
+                $courseTitle = $course->course->code . ' - ' . $course->course->title;
+                if (!isset(self::$_assignedCourse[$programId])) {
+                    self::$_assignedCourse[$programId] = [];
+                }
+                if (!isset(self::$_assignedCourse[$programId][$courseId])) {
+                    self::$_assignedCourse[$programId][$courseId] = $courseTitle;
+                }
             }
-        );
+        }
         return self::$_assignedCourse;
     }
 

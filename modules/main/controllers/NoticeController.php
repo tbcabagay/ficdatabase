@@ -73,8 +73,7 @@ class NoticeController extends Controller
         }
         $model = new Notice();
 
-        if ($model->load(Yii::$app->request->post()) && $model->add()) {
-            $selections = 
+        if ($model->load(Yii::$app->request->post()) && $model->add($id)) {
             var_dump($_POST);
             exit();
             return $this->redirect(['view', 'id' => $model->id]);
@@ -82,7 +81,7 @@ class NoticeController extends Controller
             return $this->render('create', [
                 'model' => $model,
                 'templates' => Template::getListTemplate(),
-                'assignedCourses' => Facultycourse::getCheckboxAssignedCourses($id),
+                'assignedCourses' => Facultycourse::getListAssignedCourses($id),
             ]);
         }
     }

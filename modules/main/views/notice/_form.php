@@ -31,22 +31,28 @@ use kartik\select2\Select2;
     <?= $form->field($model, 'date_course_start')->widget(DatePicker::className(), [
         'pluginOptions' => [
             'autoclose' => true,
+            'format' => 'yyyy-mm-dd',
+            'todayHighlight' => true,
         ],
     ]) ?>
 
     <?= $form->field($model, 'date_final_exam')->widget(DatePicker::className(), [
         'pluginOptions' => [
             'autoclose' => true,
+            'format' => 'yyyy-mm-dd',
+            'todayHighlight' => true,
         ],
     ]) ?>
 
     <?= $form->field($model, 'date_submission')->widget(DatePicker::className(), [
         'pluginOptions' => [
             'autoclose' => true,
+            'format' => 'yyyy-mm-dd',
+            'todayHighlight' => true,
         ],
     ]) ?>
 
-    <?= $form->field($model, 'course_id')->multiselect($assignedCourses, ['height' => '250px']) ?>
+    <?= $form->field($model, 'courses')->dropDownList($assignedCourses, ['multiple' => true, 'size' => 10]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

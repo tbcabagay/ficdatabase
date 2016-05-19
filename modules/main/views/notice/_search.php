@@ -23,11 +23,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'template_id') ?>
 
-    <?= $form->field($model, 'course_id') ?>
-
-    <?php // echo $form->field($model, 'reference_number') ?>
-
-    <?php // echo $form->field($model, 'semester') ?>
+    <?= $form->field($model, 'semester') ?>
 
     <?php // echo $form->field($model, 'academic_year') ?>
 
@@ -37,7 +33,7 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'date_submission') ?>
 
-    <?php // echo $form->field($model, 'created_at') ?>
+    <?php // echo $form->field($model, 'reference_number') ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>

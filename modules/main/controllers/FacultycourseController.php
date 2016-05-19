@@ -40,7 +40,7 @@ class FacultycourseController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        $assignedCourses = Facultycourse::getAssignedCourses($id);
+        $assignedCourses = Facultycourse::getColumnAssignedCourses($id);
         $programs = Program::getListProgram();
 
         $searchModel = new CourseSearch();

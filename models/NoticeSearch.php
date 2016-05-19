@@ -18,8 +18,8 @@ class NoticeSearch extends Notice
     public function rules()
     {
         return [
-            [['id', 'user_id', 'faculty_id', 'template_id', 'course_id'], 'integer'],
-            [['reference_number', 'semester', 'academic_year', 'date_course_start', 'date_final_exam', 'date_submission', 'created_at'], 'safe'],
+            [['id', 'user_id', 'faculty_id', 'template_id'], 'integer'],
+            [['semester', 'academic_year', 'date_course_start', 'date_final_exam', 'date_submission', 'reference_number'], 'safe'],
         ];
     }
 
@@ -63,16 +63,14 @@ class NoticeSearch extends Notice
             'user_id' => $this->user_id,
             'faculty_id' => $this->faculty_id,
             'template_id' => $this->template_id,
-            'course_id' => $this->course_id,
             'date_course_start' => $this->date_course_start,
             'date_final_exam' => $this->date_final_exam,
             'date_submission' => $this->date_submission,
-            'created_at' => $this->created_at,
         ]);
 
-        $query->andFilterWhere(['like', 'reference_number', $this->reference_number])
-            ->andFilterWhere(['like', 'semester', $this->semester])
-            ->andFilterWhere(['like', 'academic_year', $this->academic_year]);
+        $query->andFilterWhere(['like', 'semester', $this->semester])
+            ->andFilterWhere(['like', 'academic_year', $this->academic_year])
+            ->andFilterWhere(['like', 'reference_number', $this->reference_number]);
 
         return $dataProvider;
     }
