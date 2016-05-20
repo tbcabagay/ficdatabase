@@ -110,6 +110,11 @@ class Faculty extends \yii\db\ActiveRecord
         return $this->first_name . ' ' . $this->last_name;
     }
 
+    public function getDesignationName()
+    {
+        return $this->designation->abbreviation . ' ' . $this->getName();
+    }
+
     public function add()
     {
         if ($this->isNewRecord) {

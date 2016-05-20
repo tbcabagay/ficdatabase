@@ -16,7 +16,7 @@ $this->registerJs("
         var addCourses = $('#add-courses');
         var addNotices = $('#add-notices');
         var grid = $('#w0');
-        var addCoursesUrl = '" . Url::to(['/main/facultycourse/bulk-create']) . "';
+        var addCoursesUrl = '" . Url::to(['/main/facultycourse/create']) . "';
         var addNoticesUrl = '" . Url::to(['/main/notice/create']) . "';
         addCourses.hide();
         addNotices.hide();

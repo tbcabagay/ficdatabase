@@ -3,7 +3,6 @@
 namespace app\models;
 
 use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%facultycourse}}".
@@ -17,7 +16,7 @@ use yii\helpers\ArrayHelper;
  */
 class Facultycourse extends \yii\db\ActiveRecord
 {
-    private static $_assignedCourse;
+    /*private static $_assignedCourse;*/
 
     /**
      * @inheritdoc
@@ -73,7 +72,7 @@ class Facultycourse extends \yii\db\ActiveRecord
         return $this->hasOne(Faculty::className(), ['id' => 'faculty_id']);
     }
 
-    public static function getColumnAssignedCourses($faculty_id)
+    /*public static function getColumnAssignedCourses($faculty_id)
     {
         $model = self::find()->select('course_id')->where(['faculty_id' => $faculty_id])->asArray()->all();
         self::$_assignedCourse = ArrayHelper::getColumn($model, 'course_id');
@@ -105,5 +104,5 @@ class Facultycourse extends \yii\db\ActiveRecord
     public static function deleteCourse($faculty_id)
     {
         self::deleteAll(['faculty_id' => $faculty_id]);
-    }
+    }*/
 }

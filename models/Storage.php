@@ -19,6 +19,7 @@ use Yii;
  */
 class Storage extends \yii\db\ActiveRecord
 {
+    const STATUS_NEW = 10;
     /**
      * @inheritdoc
      */

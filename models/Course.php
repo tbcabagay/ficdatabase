@@ -16,6 +16,7 @@ use yii\helpers\ArrayHelper;
  * @property Program $program
  * @property Facultycourse[] $facultycourses
  * @property Notice[] $notices
+ * @property Storage[] $storages
  */
 class Course extends \yii\db\ActiveRecord
 {
@@ -80,7 +81,31 @@ class Course extends \yii\db\ActiveRecord
         return $this->hasMany(Notice::className(), ['course_id' => 'id']);
     }
 
-    public static function getListCourse()
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStorages()
+    {
+        return $this->hasMany(Storage::className(), ['course_id' => 'id']);
+    }
+
+    public static function getListMultipleCourse()
+    {
+        $programs = Program::find()->all();
+        foreach ($programs as $program) {
+            $courses = self::find()->where(['program_id' => $program->id])->all();
+            $options = [];
+            foreach ($courses as $course) {
+                $options[$course->id] = $course->code . ' - ' . $course->title;
+            }
+            if (empty($options) === false) {
+                self::$_listCourse[$program->name] = $options;
+            }
+        }
+        return self::$_listCourse;
+    }
+
+    /*public static function getListCourse()
     {
         self::$_listCourse = ArrayHelper::map(self::find()->all(), 'id', 'code');
         return self::$_listCourse;
@@ -106,5 +131,5 @@ class Course extends \yii\db\ActiveRecord
             }
         }
         return self::$_listCourse;
-    }
+    }*/
 }

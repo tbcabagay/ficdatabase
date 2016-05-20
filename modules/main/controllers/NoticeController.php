@@ -82,6 +82,7 @@ class NoticeController extends Controller
                 'model' => $model,
                 'templates' => Template::getListTemplate(),
                 'assignedCourses' => Facultycourse::getListAssignedCourses($id),
+                'semesters' => $model->getSemesterRadioList(),
             ]);
         }
     }

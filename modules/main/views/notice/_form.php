@@ -24,7 +24,7 @@ use kartik\select2\Select2;
 
     <?= $form->field($model, 'reference_number')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'semester')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'semester')->radioList($semesters) ?>
 
     <?= $form->field($model, 'academic_year')->textInput(['maxlength' => true]) ?>
 

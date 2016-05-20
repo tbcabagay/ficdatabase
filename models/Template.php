@@ -17,6 +17,7 @@ use yii\helpers\ArrayHelper;
  * @property string $created_at
  * @property string $updated_at
  *
+ * @property Notice[] $notices
  * @property User $user
  * @property Notice[] $notices
  */
@@ -59,6 +60,14 @@ class Template extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNotices()
+    {
+        return $this->hasMany(Notice::className(), ['template_id' => 'id']);
     }
 
     /**

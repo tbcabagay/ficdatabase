@@ -18,7 +18,6 @@ class FacultycourseSearch extends Facultycourse
     public function rules()
     {
         return [
-            //[['id', 'faculty_id', 'course_id'], 'integer'],
             [['faculty_id', 'course_id'], 'integer'],
         ];
     }
@@ -59,7 +58,6 @@ class FacultycourseSearch extends Facultycourse
 
         // grid filtering conditions
         $query->andFilterWhere([
-            //'id' => $this->id,
             'faculty_id' => $this->faculty_id,
             'course_id' => $this->course_id,
         ]);
