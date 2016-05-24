@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-
+use kartik\growl\Growl;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Facultycourse */
@@ -9,6 +9,8 @@ use yii\helpers\Html;
 $this->title = Yii::t('app', 'Add Courses');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Facultycourses'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$session = Yii::$app->getSession();
 ?>
 <div class="facultycourse-create">
 
@@ -35,3 +37,12 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
 </div>
+
+<?php if ($session->has('success')) {
+    echo Growl::widget([
+        'type' => Growl::TYPE_SUCCESS,
+        'icon' => 'glyphicon glyphicon-ok-sign',
+        'title' => 'Success!',
+        'body' => $session->getFlash('success'),
+    ]);
+} ?>

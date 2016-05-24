@@ -45,6 +45,10 @@ class FacultycourseController extends Controller
             $model->courses = $model->getAssignedCourses($id);
 
             if ($model->load(Yii::$app->request->post()) && $model->add($id)) {
+                Yii::$app->session->setFlash('success', [
+                    Yii::t('app', 'The selected courses has been saved.'),
+                ]);
+
                 return $this->redirect(['create', 'id' => $id]);
             } else {
                 return $this->render('create', [

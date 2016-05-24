@@ -51,7 +51,7 @@ class AuthHandler
                         'source_id' => (string)$id,
                     ]);
                     if ($auth->save() === false) {
-                        $session->setFlash('error',  [
+                        $session->setFlash('error', [
                             Yii::t('app', 'Unable to save {client} account: {errors}', [
                                 'client' => $this->client->getTitle(),
                                 'errors' => json_encode($auth->getErrors()),
