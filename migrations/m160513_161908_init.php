@@ -80,7 +80,7 @@ class m160513_161908_init extends Migration
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
             'name' => $this->string(50)->notNull(),
-            'content' => $this->text(),
+            'content' => $this->text()->notNull(),
             'created_at' => $this->dateTime()->notNull(),
             'updated_at' => $this->dateTime(),
         ]);
@@ -106,7 +106,8 @@ class m160513_161908_init extends Migration
             'course_id' => $this->integer()->notNull(),
             'status' => $this->smallInteger()->notNull(),
             'location' => $this->string(500)->notNull(),
-            'created_at' => $this->dateTime()->notNull(),           
+            'created_at' => $this->dateTime()->notNull(),
+            'updated_at' => $this->dateTime(),
         ]);
 
         $this->addForeignKey('fk-user-office_id-office-id', '{{%user}}', 'office_id', '{{%office}}', 'id', 'RESTRICT', 'CASCADE');

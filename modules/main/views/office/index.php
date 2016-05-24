@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'pjax' => true,
                 'toolbar' => [
                     ['content' =>
-                        Html::a('<i class="glyphicon glyphicon-plus"></i> Add', ['create'],['title' => Yii::t('app', 'Add'), 'class' => 'btn btn-success',]) . ' '.
+                        Html::a('<i class="glyphicon glyphicon-plus"></i> Add', ['create'],['data-pjax' => 0, 'title' => Yii::t('app', 'Add'), 'class' => 'btn btn-success',]) . ' '.
                         Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('app', 'Reset Grid')])
                     ],
                     '{toggleData}',

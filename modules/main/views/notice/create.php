@@ -14,7 +14,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header"><?= Html::encode($this->title) ?></h1>
+            <h1 class="page-header"><?= Html::encode($this->title) ?><br>
+            <small><i class="glyphicon glyphicon-user"></i> <?= $faculty->name ?></small>
+            <?= Html::a('<span class="glyphicon glyphicon-menu-left"></span> Go Back', ['faculty/index'], ['class' => 'btn btn-primary pull-right']) ?></h1>
         </div>
     </div>
 

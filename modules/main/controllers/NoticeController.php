@@ -84,12 +84,11 @@ class NoticeController extends Controller
         $model = new Notice();
 
         if ($model->load(Yii::$app->request->post()) && $model->add($id)) {
-            var_dump($_POST);
-            exit();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'faculty' => $faculty,
                 'templates' => Template::getListTemplate(),
                 'assignedCourses' => Facultycourse::getListAssignedCourses($id),
                 'semesters' => $model->getSemesterRadioList(),

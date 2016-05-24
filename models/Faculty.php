@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%faculty}}".
@@ -40,10 +41,25 @@ class Faculty extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-            [['first_name', 'last_name', 'middle_name', 'designation_id', 'email', 'status', 'created_at'], 'required'],
+            [['first_name', 'last_name', 'middle_name', 'designation_id', 'email', 'status'], 'required'],
             [['designation_id', 'status'], 'integer'],
             [['email'], 'email'],
             [['email'], 'unique'],

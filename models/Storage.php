@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "{{%storage}}".
@@ -13,6 +15,7 @@ use Yii;
  * @property integer $status
  * @property string $location
  * @property string $created_at
+ * @property string $updated_at
  *
  * @property Course $course
  * @property Notice $notice
@@ -31,12 +34,27 @@ class Storage extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-            [['notice_id', 'course_id', 'status', 'location', 'created_at'], 'required'],
+            [['notice_id', 'course_id', 'status', 'location'], 'required'],
             [['notice_id', 'course_id', 'status'], 'integer'],
-            [['created_at'], 'safe'],
+            [['created_at', 'updated_at'], 'safe'],
             [['location'], 'string', 'max' => 500],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['notice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Notice::className(), 'targetAttribute' => ['notice_id' => 'id']],
@@ -55,6 +73,7 @@ class Storage extends \yii\db\ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'location' => Yii::t('app', 'Location'),
             'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
 

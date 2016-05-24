@@ -63,7 +63,7 @@ class TemplateController extends Controller
     {
         $model = new Template();
 
-        if ($model->load(Yii::$app->request->post()) && $model->add()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         } else {
             return $this->render('create', [
@@ -82,7 +82,7 @@ class TemplateController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->edit()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         } else {
             return $this->render('update', [

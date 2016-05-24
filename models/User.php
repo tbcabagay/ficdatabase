@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\db\Expression;
 use yii\web\IdentityInterface;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%user}}".
@@ -40,10 +41,25 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-            [['auth_key', 'email', 'status', 'office_id', 'created_at'], 'required'],
+            [['auth_key', 'email', 'status', 'office_id'], 'required'],
             [['status', 'office_id'], 'integer'],
             [['email'], 'email'],
             [['email'], 'validateEmailDomain'],
@@ -161,7 +177,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         if ($this->isNewRecord) {
             $this->auth_key = \Yii::$app->security->generateRandomString();
             $this->status = self::STATUS_ACTIVE;
-            $this->created_at = new Expression('NOW()');
 
             if ($this->save()) {
                 return true;

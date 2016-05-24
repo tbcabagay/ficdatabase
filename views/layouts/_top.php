@@ -16,7 +16,9 @@ $identity = Yii::$app->user->identity;
             <a class="navbar-brand" href="#"><span>UPOU</span>FIC Database</a>
             <ul class="user-menu">
                 <li class="dropdown pull-right">
+                <?php if (\Yii::$app->user->isGuest === false): ?>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> <?= Html::encode($identity->email) ?> <span class="caret"></span></a>
+                <?php endif; ?>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="#"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> Profile</a></li>
                         <li><a href="#"><svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg> Logout</a></li>

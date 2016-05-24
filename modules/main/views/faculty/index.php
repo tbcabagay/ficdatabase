@@ -76,9 +76,9 @@ $this->registerJs("
                 'pjax' => true,
                 'toolbar' => [
                     ['content' =>
-                        Html::a('<i class="glyphicon glyphicon-plus"></i> Add', ['create'],['title' => Yii::t('app', 'Add'), 'class' => 'btn btn-success',]) . ' '.
-                        Html::a('<i class="glyphicon glyphicon-book"></i> Courses', '#',['title' => Yii::t('app', 'Add Courses'), 'class' => 'btn btn-primary', 'id' => 'add-courses']) . ' '.
-                        Html::a('<i class="glyphicon glyphicon-file"></i> Notices', '#',['title' => Yii::t('app', 'Add Notices'), 'class' => 'btn btn-warning', 'id' => 'add-notices']) . ' '.
+                        Html::a('<i class="glyphicon glyphicon-plus"></i> Add', ['create'],['data-pjax' => 0, 'title' => Yii::t('app', 'Add'), 'class' => 'btn btn-success',]) . ' '.
+                        Html::a('<i class="glyphicon glyphicon-book"></i> Courses', '#',['data-pjax' => 0, 'title' => Yii::t('app', 'Add Courses'), 'class' => 'btn btn-primary', 'id' => 'add-courses']) . ' '.
+                        Html::a('<i class="glyphicon glyphicon-file"></i> Notices', '#',['data-pjax' => 0, 'title' => Yii::t('app', 'Add Notices'), 'class' => 'btn btn-warning', 'id' => 'add-notices']) . ' '.
                         Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => Yii::t('app', 'Reset Grid')])
                     ],
                     '{toggleData}',

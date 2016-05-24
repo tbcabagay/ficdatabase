@@ -58,8 +58,8 @@ $config = [
         ],
         'pdf' => [
             'class' => Pdf::classname(),
-            'marginLeft' => 25.4,
-            'marginRight' => 25.4,
+            'marginLeft' => 12.7,
+            'marginRight' => 12.7,
             'marginTop' => 12.7,
             'marginBottom' => 15.24,
             'format' => Pdf::FORMAT_A4,
@@ -67,7 +67,6 @@ $config = [
             'destination' => Pdf::DEST_BROWSER,
             'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
             'cssInline' => '.header {font-family: "Times New Roman", Georgia, Serif;}.title {font-size: 13pt;}.office {font-size: 8pt;}.title,.office {font-weight: bold; text-align: center;}.content{font-size: 10pt; text-align: justify;}.signature {padding-top: 28px;}',
-            //'cssFile' => '@webroot/css/mpdf.css',
         ],
     ],
     'modules' => [

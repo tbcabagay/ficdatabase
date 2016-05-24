@@ -6,6 +6,8 @@ use Yii;
 use yii\db\Expression;
 use yii\web\NotFoundHttpException;
 use yii\helpers\ArrayHelper;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "{{%template}}".
@@ -35,10 +37,30 @@ class Template extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'user_id',
+                'updatedByAttribute' => 'user_id',
+            ],
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-            [['user_id', 'name', 'created_at'], 'required'],
+            [['name', 'content'], 'required'],
             [['user_id'], 'integer'],
             [['content'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
@@ -78,35 +100,16 @@ class Template extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
-    public function add()
-    {
-        if ($this->isNewRecord) {
-            $identity = \Yii::$app->user->identity;
-            $this->user_id = $identity->id;
-            $this->created_at = new Expression('NOW()');
-
-            if ($this->save()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function edit()
-    {
-        $this->updated_at = new Expression('NOW()');
-        return $this->save();
-    }
-
     public static function download($id)
     {
         $model = self::find()->select(['content'])->where(['id' => $id])->limit(1)->one();
         if ($model !== null) {
+            $identity = \Yii::$app->user->identity;
             $pdf = Yii::$app->pdf;
             $mpdf = $pdf->getApi();
             $mpdf->defaultfooterfontsize = 8;
             $mpdf->defaultfooterfontstyle = 'B';
-            $mpdf->SetFooter('3rd Floor, UPOU Main Building, Los Ba&ntilde;os, Laguna, Philippines - Telefax: (6349)5366010 or 5366001 to 06 ext 821, 333, 332 fmds@upou.edu.ph - www.upou.edu.ph');
+            $mpdf->SetFooter($identity->office->footer_information);
 
             $pdf->content = $model->content;
             return $pdf->render();
