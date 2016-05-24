@@ -11,6 +11,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $id
  * @property string $code
  * @property string $name
+ * @property string $footer_information
  *
  * @property Program[] $programs
  * @property User[] $users
@@ -34,7 +35,7 @@ class Office extends \yii\db\ActiveRecord
         return [
             [['code', 'name'], 'required'],
             [['code'], 'string', 'max' => 15],
-            [['name'], 'string', 'max' => 200],
+            [['name', 'footer_information'], 'string', 'max' => 200],
         ];
     }
 
@@ -47,15 +48,16 @@ class Office extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'code' => Yii::t('app', 'Code'),
             'name' => Yii::t('app', 'Name'),
+            'footer_information' => Yii::t('app', 'Footer Information'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPrograms() 
-    { 
-        return $this->hasMany(Program::className(), ['office_id' => 'id']); 
+    public function getPrograms()
+    {
+        return $this->hasMany(Program::className(), ['office_id' => 'id']);
     }
 
     /**

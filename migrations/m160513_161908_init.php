@@ -30,6 +30,7 @@ class m160513_161908_init extends Migration
             'id' => $this->primaryKey(),
             'code' => $this->string(15)->notNull(),
             'name' => $this->string(200)->notNull(),
+            'footer_information' => $this->string(200),
         ]);
 
         /* Designation table */
@@ -137,7 +138,6 @@ class m160513_161908_init extends Migration
         $this->dropForeignKey('fk-notice-user_id-user-id', '{{%notice}}');
         $this->dropForeignKey('fk-notice-faculty_id-faculty-id', '{{%notice}}');
         $this->dropForeignKey('fk-notice-template_id-template-id', '{{%notice}}');
-        $this->dropForeignKey('fk-notice-course_id-course-id', '{{%notice}}');
         $this->dropForeignKey('fk-storage-notice_id-notice-id', '{{%storage}}');
         $this->dropForeignKey('fk-storage-course_id-course-id', '{{%storage}}');
 

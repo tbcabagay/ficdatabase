@@ -36,6 +36,8 @@ class Notice extends \yii\db\ActiveRecord
     private $_path = null;
     private $_filename = null;
     private $_semesters = null;
+    private $_identity = null;
+
     /**
      * @inheritdoc
      */
@@ -118,8 +120,8 @@ class Notice extends \yii\db\ActiveRecord
     {
         if (($this->_faculty = Faculty::findOne($faculty_id)) !== null) {
             if ($this->isNewRecord) {
-                $identity = Yii::$app->user->identity;
-                $this->user_id = $identity->id;
+                $this->_identity = Yii::$app->user->identity;
+                $this->user_id = $this->_identity->id;
                 $this->faculty_id = $this->_faculty->id;
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
@@ -162,6 +164,7 @@ class Notice extends \yii\db\ActiveRecord
         $storage = Storage::findOne($model->id);
 
         $content = $this->template->content;
+        $content = str_replace('{{office_name}}', strtoupper($this->_identity->office->name), $content);
         $content = str_replace('{{designation_name_uppercase}}', strtoupper($faculty->designationName), $content);
         $content = str_replace('{{designation_name}}', $faculty->designationName, $content);
         $content = str_replace('{{reference_number}}', $this->reference_number, $content);
@@ -196,7 +199,7 @@ class Notice extends \yii\db\ActiveRecord
         $mpdf = $pdf->getApi();
         $mpdf->defaultfooterfontsize = 8;
         $mpdf->defaultfooterfontstyle = 'B';
-        $mpdf->SetFooter('3rd Floor, UPOU Main Building, Los Ba&ntilde;os, Laguna, Philippines - Telefax: (6349)5366010 or 5366001 to 06 ext 821, 333, 332 fmds@upou.edu.ph - www.upou.edu.ph');
+        $mpdf->SetFooter($this->_identity->office->footer_information);
         return $pdf;
     }
 
