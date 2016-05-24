@@ -78,14 +78,6 @@ class Template extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getNotices() 
-    { 
-        return $this->hasMany(Notice::className(), ['template_id' => 'id']); 
-    }
-
     public function add()
     {
         if ($this->isNewRecord) {

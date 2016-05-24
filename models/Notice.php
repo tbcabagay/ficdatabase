@@ -101,14 +101,6 @@ class Notice extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getFaculty()
-    {
-        return $this->hasOne(Faculty::className(), ['id' => 'faculty_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);

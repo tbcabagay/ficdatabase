@@ -16,7 +16,7 @@ use Yii;
  */
 class Facultycourse extends \yii\db\ActiveRecord
 {
-    /*private static $_assignedCourse;*/
+    private static $_assignedCourse;
 
     /**
      * @inheritdoc
@@ -77,7 +77,7 @@ class Facultycourse extends \yii\db\ActiveRecord
         $model = self::find()->select('course_id')->where(['faculty_id' => $faculty_id])->asArray()->all();
         self::$_assignedCourse = ArrayHelper::getColumn($model, 'course_id');
         return self::$_assignedCourse;
-    }
+    }*/
 
     public static function getListAssignedCourses($faculty_id)
     {
@@ -101,7 +101,7 @@ class Facultycourse extends \yii\db\ActiveRecord
         return self::$_assignedCourse;
     }
 
-    public static function deleteCourse($faculty_id)
+    /*public static function deleteCourse($faculty_id)
     {
         self::deleteAll(['faculty_id' => $faculty_id]);
     }*/
