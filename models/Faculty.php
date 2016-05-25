@@ -146,7 +146,12 @@ class Faculty extends \yii\db\ActiveRecord
 
     public static function getListFaculty()
     {
-        self::$_listFaculty = ArrayHelper::map(self::find()->all(), 'id', 'last_name');
+        self::$_listFaculty = ArrayHelper::map(self::find()->all(),
+            'id',
+            function($model, $defaultValue) {
+                return $model->name;
+            }
+        );
         return self::$_listFaculty;
     }
 }

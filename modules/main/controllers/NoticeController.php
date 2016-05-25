@@ -13,6 +13,8 @@ use yii\filters\AccessControl;
 use app\models\Faculty;
 use app\models\Facultycourse;
 use app\models\Template;
+use app\models\Storage;
+use app\models\StorageSearch;
 
 /**
  * NoticeController implements the CRUD actions for Notice model.
@@ -47,15 +49,21 @@ class NoticeController extends Controller
      * Lists all Notice models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($faculty_id)
     {
-        $searchModel = new NoticeSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $faculty = Faculty::findOne($faculty_id);
+        if ($faculty !== null) {
+            $searchModel = new StorageSearch();
+            $dataProvider = $searchModel->search($faculty_id, Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'faculty' => $faculty,
+            ]);
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 
     /**
@@ -75,22 +83,30 @@ class NoticeController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($id)
+    public function actionCreate($faculty_id)
     {
-        $faculty = Faculty::findOne($id);
+        $faculty = Faculty::findOne($faculty_id);
         if ($faculty === null) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
         $model = new Notice();
+        $model->generateReferenceNumber();
 
-        if ($model->load(Yii::$app->request->post()) && $model->add($id)) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $model->template_id = 1;
+        $model->semester = 1;
+        $model->academic_year = '2015-2016';
+        $model->date_course_start = '2016-05-25';
+        $model->date_final_exam = '2016-05-26';
+        $model->date_submission = '2016-05-27';
+
+        if ($model->load(Yii::$app->request->post()) && $model->add($faculty_id)) {
+            return $this->redirect(['index', 'faculty_id' => $faculty->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
                 'faculty' => $faculty,
                 'templates' => Template::getListTemplate(),
-                'assignedCourses' => Facultycourse::getListAssignedCourses($id),
+                'assignedCourses' => Facultycourse::getListAssignedCourses($faculty_id),
                 'semesters' => $model->getSemesterRadioList(),
             ]);
         }
@@ -126,6 +142,16 @@ class NoticeController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionDownload($storage_id)
+    {
+        $model = Storage::findOne($storage_id);
+        if ($model !== null) {
+            return \Yii::$app->response->sendFile($model->location);
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 
     /**

@@ -17,21 +17,21 @@ $this->registerJs("
         var addNotices = $('#add-notices');
         var grid = $('#w0');
         var addCoursesUrl = '" . Url::to(['/main/facultycourse/create']) . "';
-        var addNoticesUrl = '" . Url::to(['/main/notice/create']) . "';
+        var addNoticesUrl = '" . Url::to(['/main/notice/index']) . "';
         addCourses.hide();
         addNotices.hide();
         
         grid.on('grid.radiochecked', function(ev, key, val) {
             addCourses.show();
             addNotices.show();
-            addCourses.attr('href', addCoursesUrl + '?id=' + val);
-            addNotices.attr('href', addNoticesUrl + '?id=' + val);
+            addCourses.attr('href', addCoursesUrl + '?faculty_id=' + val);
+            addNotices.attr('href', addNoticesUrl + '?faculty_id=' + val);
         });
         grid.on('grid.radiocleared', function(ev, key, val) {
             addCourses.hide();
             addNotices.hide();
-            addCourses.attr('href', addCoursesUrl + '?id=' + val);
-            addNotices.attr('href', addNoticesUrl + '?id=' + val);
+            addCourses.attr('href', addCoursesUrl + '?faculty_id=' + val);
+            addNotices.attr('href', addNoticesUrl + '?faculty_id=' + val);
         });
     } (window.jQuery);
 ");

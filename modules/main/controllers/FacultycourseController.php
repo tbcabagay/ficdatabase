@@ -47,19 +47,19 @@ class FacultycourseController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($id)
+    public function actionCreate($faculty_id)
     {
-        $faculty = Faculty::findOne($id);
+        $faculty = Faculty::findOne($faculty_id);
         if ($faculty !== null) {
             $model = new FacultycourseForm();
-            $model->courses = $model->getAssignedCourses($id);
+            $model->courses = $model->getAssignedCourses($faculty_id);
 
-            if ($model->load(Yii::$app->request->post()) && $model->add($id)) {
+            if ($model->load(Yii::$app->request->post()) && $model->add($faculty_id)) {
                 Yii::$app->session->setFlash('success', [
                     Yii::t('app', 'The selected courses has been saved.'),
                 ]);
 
-                return $this->redirect(['create', 'id' => $id]);
+                return $this->redirect(['create', 'faculty_id' => $faculty->id]);
             } else {
                 return $this->render('create', [
                     'model' => $model,

@@ -8,33 +8,32 @@ use yii\bootstrap\Nav;
         'encodeLabels' => false,
         'items' => [
             [
-                'label' => 'Template',
-                'url' => ['/main/template/index'],
+                'label' => '<svg class="glyph stroked chevron right"><use xlink:href="#stroked-chevron-right"/></svg> Faculty',
+                'url' => ['/main/faculty/index'],
             ],
-            '<li role="presentation" class="divider"></li>',
             [
-                'label' => 'Program',
+                'label' => '<svg class="glyph stroked chevron right"><use xlink:href="#stroked-chevron-right"/></svg> Program',
                 'url' => ['/main/program/index'],
             ],
             [
-                'label' => 'Course',
+                'label' => '<svg class="glyph stroked chevron right"><use xlink:href="#stroked-chevron-right"/></svg> Course',
                 'url' => ['/main/course/index'],
             ],
             [
-                'label' => 'Designation',
+                'label' => '<svg class="glyph stroked chevron right"><use xlink:href="#stroked-chevron-right"/></svg> Designation',
                 'url' => ['/main/designation/index'],
-            ],
-            [
-                'label' => 'Faculty',
-                'url' => ['/main/faculty/index'],
             ],
             '<li role="presentation" class="divider"></li>',
             [
-                'label' => 'User',
+                'label' => '<svg class="glyph stroked chevron right"><use xlink:href="#stroked-chevron-right"/></svg> Template',
+                'url' => ['/main/template/index'],
+            ],
+            [
+                'label' => '<svg class="glyph stroked chevron right"><use xlink:href="#stroked-chevron-right"/></svg> User',
                 'url' => ['/main/user/index'],
             ],
             [
-                'label' => 'Office',
+                'label' => '<svg class="glyph stroked chevron right"><use xlink:href="#stroked-chevron-right"/></svg> Office',
                 'url' => ['/main/office/index'],
             ],
 

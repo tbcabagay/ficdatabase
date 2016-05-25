@@ -31,6 +31,7 @@ use yii\behaviors\BlameableBehavior;
 class Notice extends \yii\db\ActiveRecord
 {
     public $courses;
+    public $storage_id;
 
     private $_faculty = null;
     private $_course = null;
@@ -38,6 +39,7 @@ class Notice extends \yii\db\ActiveRecord
     private $_filename = null;
     private $_semesters = null;
     private $_identity = null;
+    private $_storage;
 
     /**
      * @inheritdoc
@@ -69,6 +71,7 @@ class Notice extends \yii\db\ActiveRecord
         return [
             [['faculty_id', 'template_id', 'semester', 'academic_year', 'date_course_start', 'date_final_exam', 'date_submission', 'reference_number', 'courses'], 'required'],
             [['user_id', 'faculty_id', 'template_id'], 'integer'],
+            [['reference_number'], 'unique'],
             [['date_course_start', 'date_final_exam', 'date_submission'], 'safe'],
             [['semester'], 'string', 'max' => 1],
             [['academic_year'], 'validateAcademicYear'],
@@ -131,12 +134,30 @@ class Notice extends \yii\db\ActiveRecord
         return $this->hasMany(Storage::className(), ['notice_id' => 'id']);
     }
 
+    public function generateReferenceNumber()
+    {
+        $year = substr(date('Y'), -2);
+        $model = self::find()
+            ->select(['reference_number'])
+            ->where(['like', 'reference_number', $year])
+            ->orderBy('reference_number DESC')
+            ->limit(1)
+            ->one();
+        if ($model !== null) {
+            $explode = explode('-', $model->reference_number);
+            $explode[1] +=  1;
+            $explode[1] = str_pad($explode[1], 4, 0, STR_PAD_LEFT);
+            $this->reference_number = implode('-', $explode);
+        } else {
+            $this->reference_number = $year . '-0001';
+        }
+    }
+
     public function add($faculty_id)
     {
         if (($this->_faculty = Faculty::findOne($faculty_id)) !== null) {
             if ($this->isNewRecord) {
                 $this->_identity = Yii::$app->user->identity;
-                /*$this->user_id = $this->_identity->id;*/
                 $this->faculty_id = $this->_faculty->id;
                 $transaction = \Yii::$app->db->beginTransaction();
                 try {
@@ -144,22 +165,21 @@ class Notice extends \yii\db\ActiveRecord
                         foreach ($this->courses as $course_id) {
                             $this->_course = Course::findOne($course_id);
                             if ($this->_course !== null) {
-                                $storage = new Storage([
+                                $this->_storage = new Storage([
                                     'notice_id' => $this->id,
                                     'course_id' => $this->_course->id,
                                     'status' => Storage::STATUS_NEW,
                                     'location' => $this->_getPath() . DIRECTORY_SEPARATOR . $this->_getFilename(),
                                     'created_at' => new Expression('NOW()'),
                                 ]);
-                                if ($storage->save()) {
-                                    $this->refresh();
-                                    $storage->refresh();
-                                    $this->_createNotice($storage);
+                                if ($this->_storage->save()) {
+                                    $this->_createNotice();
                                 }
                             }
                         }
                     }
                     $transaction->commit();
+                    return true;
                 } catch (\Exception $e) {
                     $transaction->rollBack();
                     throw $e;
@@ -171,12 +191,12 @@ class Notice extends \yii\db\ActiveRecord
         }
     }
 
-    private function _createNotice($model)
+    private function _createNotice()
     {
-        $pdf = $this->getPdf();
         $dateFormatter = \Yii::$app->formatter;
         $course = $this->_course;
         $faculty = $this->_faculty;
+        $this->_storage->refresh();
 
         $content = $this->template->content;
         $content = str_replace('{{office_name}}', strtoupper($this->_identity->office->name), $content);
@@ -187,21 +207,37 @@ class Notice extends \yii\db\ActiveRecord
         $content = str_replace('{{academic_year}}', $this->academic_year, $content);
         $content = str_replace('{{course_code}}', $course->code, $content);
         $content = str_replace('{{course_title}}', $course->title, $content);
-        $content = str_replace('{{date_now}}', $dateFormatter->asDate($model->created_at, 'php:d F Y'), $content);
+        $content = str_replace('{{date_now}}', $dateFormatter->asDate($this->_storage->created_at, 'php:d F Y'), $content);
         $content = str_replace('{{date_academic_start}}', $dateFormatter->asDate($this->date_course_start, 'php:d F Y'), $content);
         $content = str_replace('{{date_academic_final_exam}}', $dateFormatter->asDate($this->date_final_exam, 'php:d F Y'), $content);
         $content = str_replace('{{date_submission}}', $dateFormatter->asDate($this->date_submission, 'php:d F Y'), $content);
         $content = str_replace('{{name}}', strtoupper($faculty->name), $content);
 
-        $pdf->filename = $model->location;
+        $pdf = $this->getPdf();
+        $pdf->filename = $this->_storage->location;
         $pdf->content = $content;
         $pdf->render();
     }
 
     public function getPdf()
     {
-        $pdf = Yii::$app->pdf;
+        /*$pdf = Yii::$app->pdf;
         $pdf->destination = Pdf::DEST_FILE;
+        $mpdf = $pdf->getApi();
+        $mpdf->defaultfooterfontsize = 8;
+        $mpdf->defaultfooterfontstyle = 'B';
+        $mpdf->SetFooter($this->_identity->office->footer_information);*/
+        $pdf = new Pdf([
+            'marginLeft' => 12.7,
+            'marginRight' => 12.7,
+            'marginTop' => 12.7,
+            'marginBottom' => 15.24,
+            'format' => Pdf::FORMAT_A4,
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            'destination' => Pdf::DEST_FILE,
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+            'cssInline' => '.header {font-family: "Times New Roman", Georgia, Serif;}.title {font-size: 13pt;}.office {font-size: 8pt;}.title,.office {font-weight: bold; text-align: center;}.content{font-size: 10pt; text-align: justify;}.signature {padding-top: 28px;}',
+        ]);
         $mpdf = $pdf->getApi();
         $mpdf->defaultfooterfontsize = 8;
         $mpdf->defaultfooterfontstyle = 'B';
