@@ -13,7 +13,7 @@ $identity = Yii::$app->user->identity;
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#"><span>UPOU</span>FIC Database</a>
+            <?= Html::a('<span>UPOU</span>FIC Database', ['/main/default/index'], ['class' => 'navbar-brand']) ?>
             <ul class="user-menu">
                 <li class="dropdown pull-right">
                 <?php if (\Yii::$app->user->isGuest === false): ?>

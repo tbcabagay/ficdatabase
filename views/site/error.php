@@ -11,17 +11,25 @@ $this->title = $name;
 ?>
 <div class="site-error">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h1><?= Html::encode($this->title) ?></h1>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-danger">
+                    <?= nl2br(Html::encode($message)) ?>
+                </div>
 
-    <div class="alert alert-danger">
-        <?= nl2br(Html::encode($message)) ?>
+                <p>
+                    The above error occurred while the Web server was processing your request.
+                </p>
+                <p>
+                    Please contact us if you think this is a server error. Thank you.
+                </p>
+            </div>
+        </div>
     </div>
 
-    <p>
-        The above error occurred while the Web server was processing your request.
-    </p>
-    <p>
-        Please contact us if you think this is a server error. Thank you.
-    </p>
-
 </div>
+    

@@ -41,20 +41,20 @@ $this->params['breadcrumbs'][] = $this->title;
                         },
                     ],
                     [
+                        'attribute' => 'created_at',
+                        'value' => function($model, $key, $index, $column) {
+                            return Yii::$app->formatter->asDateTime($model->created_at);
+                        },
+                    ],
+                    [
                         'attribute' => 'location',
                         'hAlign' => 'center',
                         'value' => function($model, $key, $index, $column) {
                             return Html::a('<i class="glyphicon glyphicon-save"></i>', ['download', 'storage_id' => $model->id], ['data-pjax' => 0]);
                         },
                         'format' => 'raw',
-                        'label' => 'Download',
+                        'label' => false,
                         'filter' => false,
-                    ],
-                    [
-                        'attribute' => 'created_at',
-                        'value' => function($model, $key, $index, $column) {
-                            return Yii::$app->formatter->asDateTime($model->created_at);
-                        },
                     ],
 
                     /*['class' => 'yii\grid\ActionColumn'],*/
