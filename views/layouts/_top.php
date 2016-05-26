@@ -20,8 +20,8 @@ $identity = Yii::$app->user->identity;
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> <?= Html::encode($identity->email) ?> <span class="caret"></span></a>
                 <?php endif; ?>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> Profile</a></li>
-                        <li><a href="#"><svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg> Logout</a></li>
+                        <li><?= Html::a('<svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> Profile', '#') ?></li>
+                        <li><?= Html::a('<svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg> Logout', ['/site/logout'], ['data-method' => 'post']) ?></li>
                     </ul>
                 </li>
             </ul>

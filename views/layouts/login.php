@@ -22,6 +22,18 @@ LteIE9Asset::register($this);
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+    <style>
+        html {
+            background: url('/images/background.jpg') no-repeat center center fixed; 
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+        body {
+            background-color: transparent;
+        }
+    </style>
 </head>
 <body>
 
