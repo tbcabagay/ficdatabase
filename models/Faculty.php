@@ -16,10 +16,14 @@ use yii\behaviors\TimestampBehavior;
  * @property string $middle_name
  * @property integer $designation_id
  * @property string $email
+ * @property string $birthday
+ * @property string $tin_number
+ * @property string $nationality
  * @property integer $status
  * @property string $created_at
  * @property string $updated_at
  *
+ * @property Education[] $educations
  * @property Designation $designation
  * @property Facultycourse[] $facultycourses
  * @property Notice[] $notices
@@ -59,14 +63,14 @@ class Faculty extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['first_name', 'last_name', 'middle_name', 'designation_id', 'email', 'status'], 'required'],
+            [['first_name', 'last_name', 'middle_name', 'designation_id', 'email', 'birthday', 'tin_number', 'nationality', 'status'], 'required'],
             [['designation_id', 'status'], 'integer'],
             [['email'], 'email'],
             [['email'], 'unique'],
             [['email'], 'validateEmailDomain'],
-            [['created_at', 'updated_at'], 'safe'],
-            [['first_name', 'last_name', 'middle_name'], 'string', 'max' => 50],
-            [['email'], 'string', 'max' => 150],
+            [['birthday', 'created_at', 'updated_at'], 'safe'],
+            [['first_name', 'last_name', 'middle_name', 'tin_number'], 'string', 'max' => 50],
+            [['email', 'nationality'], 'string', 'max' => 150],
             [['designation_id'], 'exist', 'skipOnError' => true, 'targetClass' => Designation::className(), 'targetAttribute' => ['designation_id' => 'id']],
         ];
     }
@@ -83,6 +87,9 @@ class Faculty extends \yii\db\ActiveRecord
             'middle_name' => Yii::t('app', 'Middle Name'),
             'designation_id' => Yii::t('app', 'Designation ID'),
             'email' => Yii::t('app', 'Email'),
+            'birthday' => Yii::t('app', 'Birthday'),
+            'tin_number' => Yii::t('app', 'Tin Number'),
+            'nationality' => Yii::t('app', 'Nationality'),
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
@@ -111,6 +118,14 @@ class Faculty extends \yii\db\ActiveRecord
     public function getNotices()
     {
         return $this->hasMany(Notice::className(), ['faculty_id' => 'id']);
+    }
+
+    /** 
+     * @return \yii\db\ActiveQuery 
+     */ 
+    public function getEducations() 
+    { 
+        return $this->hasMany(Education::className(), ['faculty_id' => 'id']); 
     }
 
     public function validateEmailDomain($attribute, $params)

@@ -92,12 +92,12 @@ class NoticeController extends Controller
         $model = new Notice();
         $model->generateReferenceNumber();
 
-        $model->template_id = 1;
+        /*$model->template_id = 1;
         $model->semester = 1;
         $model->academic_year = '2015-2016';
         $model->date_course_start = '2016-05-25';
         $model->date_final_exam = '2016-05-26';
-        $model->date_submission = '2016-05-27';
+        $model->date_submission = '2016-05-27';*/
 
         if ($model->load(Yii::$app->request->post()) && $model->add($faculty_id)) {
             return $this->redirect(['index', 'faculty_id' => $faculty->id]);
