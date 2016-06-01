@@ -15,7 +15,7 @@ use kartik\select2\Select2;
 
     <?= $form->field($model, 'designation_id')->widget(Select2::classname(), [
         'data' => $designations,
-        'options' => ['placeholder' => 'Select a program ...'],
+        'options' => ['placeholder' => 'Select a designation ...'],
         'pluginOptions' => [
             'allowClear' => true,
         ],
@@ -28,6 +28,14 @@ use kartik\select2\Select2;
     <?= $form->field($model, 'middle_name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?> 
+ 
+    <?= $form->field($model, 'birthday')->textInput() ?> 
+ 
+    <?= $form->field($model, 'tin_number')->textInput(['maxlength' => true]) ?> 
+ 
+    <?= $form->field($model, 'nationality')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

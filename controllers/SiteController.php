@@ -7,6 +7,9 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\components\AuthHandler;
+use app\models\LoginForm;
+use app\models\Faculty;
+use app\models\Designation;
 
 class SiteController extends Controller
 {
@@ -70,9 +73,31 @@ class SiteController extends Controller
     {
         if (!Yii::$app->user->isGuest) {
             return $this->redirect(['/main/default/index']);
-        }
+        } else {
+            $model = new LoginForm();
 
-        return $this->render('login');
+            return $this->render('login', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    public function actionCreate()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->redirect(['/main/default/index']);
+        } else {
+            $model = new Faculty();
+
+            if ($model->load(Yii::$app->request->post()) && $model->add()) {
+
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                    'designations' => Designation::getListDesignation(),
+                ]);
+            }
+        }
     }
 
     public function actionLogout()

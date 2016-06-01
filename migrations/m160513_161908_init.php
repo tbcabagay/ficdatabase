@@ -48,6 +48,7 @@ class m160513_161908_init extends Migration
             'middle_name' => $this->string(50)->notNull(),
             'designation_id' => $this->integer()->notNull(),
             'email' => $this->string(150)->notNull(),
+            'password' => $this->char(60),
             'birthday' => $this->date()->notNull(),
             'tin_number' => $this->string(50)->notNull(),
             'nationality' => $this->string(150)->notNull(),
@@ -154,7 +155,7 @@ class m160513_161908_init extends Migration
         $this->dropForeignKey('fk-notice-template_id-template-id', '{{%notice}}');
         $this->dropForeignKey('fk-storage-notice_id-notice-id', '{{%storage}}');
         $this->dropForeignKey('fk-storage-course_id-course-id', '{{%storage}}');
-        $this->addForeignKey('fk-education-faculty_id-faculty-id', '{{%education}}');
+        $this->dropForeignKey('fk-education-faculty_id-faculty-id', '{{%education}}');
 
         $this->dropTable('{{%office}}');
         $this->dropTable('{{%auth}}');

@@ -30,17 +30,6 @@ LteIE9Asset::register($this);
             -o-background-size: cover;
             background-size: cover;
         }
-        html:before{
-            position: absolute;
-            content:" ";
-            top:0;
-            left:0;
-            width:100%;
-            height:100%;
-            display: block;
-            z-index:0;
-            background-color: rgba(0, 0 ,0 ,0.5);
-        }
         body {
             background-color: transparent;
         }

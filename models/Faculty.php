@@ -16,6 +16,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $middle_name
  * @property integer $designation_id
  * @property string $email
+ * @property string $password
  * @property string $birthday
  * @property string $tin_number
  * @property string $nationality
@@ -71,6 +72,7 @@ class Faculty extends \yii\db\ActiveRecord
             [['birthday', 'created_at', 'updated_at'], 'safe'],
             [['first_name', 'last_name', 'middle_name', 'tin_number'], 'string', 'max' => 50],
             [['email', 'nationality'], 'string', 'max' => 150],
+            [['password'], 'string', 'max' => 60],
             [['designation_id'], 'exist', 'skipOnError' => true, 'targetClass' => Designation::className(), 'targetAttribute' => ['designation_id' => 'id']],
         ];
     }
@@ -85,15 +87,24 @@ class Faculty extends \yii\db\ActiveRecord
             'first_name' => Yii::t('app', 'First Name'),
             'last_name' => Yii::t('app', 'Last Name'),
             'middle_name' => Yii::t('app', 'Middle Name'),
-            'designation_id' => Yii::t('app', 'Designation ID'),
+            'designation_id' => Yii::t('app', 'Designation'),
             'email' => Yii::t('app', 'Email'),
+            'password' => Yii::t('app', 'Password'),
             'birthday' => Yii::t('app', 'Birthday'),
-            'tin_number' => Yii::t('app', 'Tin Number'),
+            'tin_number' => Yii::t('app', 'TIN Number'),
             'nationality' => Yii::t('app', 'Nationality'),
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEducations()
+    {
+        return $this->hasMany(Education::className(), ['faculty_id' => 'id']);
     }
 
     /**
@@ -118,14 +129,6 @@ class Faculty extends \yii\db\ActiveRecord
     public function getNotices()
     {
         return $this->hasMany(Notice::className(), ['faculty_id' => 'id']);
-    }
-
-    /** 
-     * @return \yii\db\ActiveQuery 
-     */ 
-    public function getEducations() 
-    { 
-        return $this->hasMany(Education::className(), ['faculty_id' => 'id']); 
     }
 
     public function validateEmailDomain($attribute, $params)
