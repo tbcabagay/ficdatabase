@@ -1,14 +1,14 @@
 <?php
 
-/* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-/* @var $model app\models\LoginForm */
-
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use kartik\select2\Select2;
+use kartik\date\DatePicker;
+use kartik\growl\Growl;
 
 $this->title = 'Create an account';
+
+$session = Yii::$app->getSession();
 ?>
 <div class="site-login">
     <div class="col-md-8 col-md-offset-2">
@@ -21,14 +21,14 @@ $this->title = 'Create an account';
                     <p class="pull-right"><?= Html::a('<i class="glyphicon glyphicon-home"></i> Go home', ['login']) ?></p>
                 </div>
 
+                <p>* Please fill all fields below</p>
+
                 <?php $form = ActiveForm::begin(); ?>
 
                 <fieldset>
                     <legend>Personal Information</legend>
                     
-                    <p>Please fill all fields below</p>
-
-                    <?= $form->field($model, 'designation_id')->widget(Select2::classname(), [
+                    <?= $form->field($faculty, 'designation_id')->widget(Select2::classname(), [
                         'data' => $designations,
                         'options' => ['placeholder' => 'Select a designation ...'],
                         'pluginOptions' => [
@@ -36,31 +36,55 @@ $this->title = 'Create an account';
                         ],
                     ]) ?>
 
-                    <?= $form->field($model, 'first_name')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($faculty, 'first_name')->textInput(['maxlength' => true]) ?>
 
-                    <?= $form->field($model, 'last_name')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($faculty, 'last_name')->textInput(['maxlength' => true]) ?>
 
-                    <?= $form->field($model, 'middle_name')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($faculty, 'middle_name')->textInput(['maxlength' => true]) ?>
               
-                    <?= $form->field($model, 'birthday')->textInput() ?>
+                    <?= $form->field($faculty, 'birthday')->widget(DatePicker::className(), [
+                        'pluginOptions' => [
+                            'autoclose' => true,
+                            'format' => 'yyyy-mm-dd',
+                            'todayHighlight' => true,
+                        ],
+                    ]) ?>
                  
-                    <?= $form->field($model, 'tin_number')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($faculty, 'tin_number')->textInput(['maxlength' => true]) ?>
                  
-                    <?= $form->field($model, 'nationality')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($faculty, 'nationality')->textInput(['maxlength' => true]) ?>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Educational Background</legend>
+
+                    <?= $form->field($education, 'degree')->textInput(['maxlength' => true])->label('Highest Degree Attained') ?>
+
+                    <?= $form->field($education, 'school')->textInput(['maxlength' => true]) ?>
+
+                    <?= $form->field($education, 'date_graduate')->widget(DatePicker::className(), [
+                        'pluginOptions' => [
+                            'autoclose' => true,
+                            'format' => 'yyyy',
+                            'todayHighlight' => true,
+                            'viewMode' => 'years',
+                            'minViewMode' => 'years',
+                        ],
+                    ])->label('Year of Graduation') ?>
                 </fieldset>
 
                 <fieldset>
                     <legend>Account Information</legend>
 
-                    <p>If you do not have <strong>UPOU webmail account</strong> or prefer to use other email address, please fill the <kbd>Password</kbd> field below </p>
+                    <?= $form->field($faculty, 'email')->textInput(['maxlength' => true]) ?>
 
-                    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($faculty, 'plain_password')->passwordInput(['maxlength' => true]) ?>
 
-                    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
+                    <?= $form->field($faculty, 'confirm_password')->passwordInput(['maxlength' => true]) ?>
                 </fieldset>
 
                 <div class="form-group">
-                    <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+                    <?= Html::submitButton(Yii::t('app', 'Create'), ['class' => 'btn btn-success']) ?>
                 </div>
 
                 <?php ActiveForm::end(); ?>
@@ -68,3 +92,12 @@ $this->title = 'Create an account';
         </div>
     </div>
 </div>
+
+<?php if ($session->has('success')) {
+    echo Growl::widget([
+        'type' => Growl::TYPE_SUCCESS,
+        'icon' => 'glyphicon glyphicon-ok-sign',
+        'title' => 'Success!',
+        'body' => $session->getFlash('success'),
+    ]);
+} ?>

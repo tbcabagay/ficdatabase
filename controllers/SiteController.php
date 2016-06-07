@@ -10,6 +10,7 @@ use app\components\AuthHandler;
 use app\models\LoginForm;
 use app\models\Faculty;
 use app\models\Designation;
+use app\models\Education;
 
 class SiteController extends Controller
 {
@@ -87,16 +88,34 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->redirect(['/main/default/index']);
         } else {
-            $model = new Faculty();
+            $faculty = new Faculty();
+            $education = new Education();
 
-            if ($model->load(Yii::$app->request->post()) && $model->add()) {
+            if ($faculty->load(Yii::$app->request->post()) && $education->load(Yii::$app->request->post())) {
+                $transaction = $faculty->getDb()->beginTransaction();
+                try {
+                    if ($faculty->add()) {
+                        $faculty->refresh();
+                        $education->faculty_id = $faculty->id;
+                        if ($education->save()) {
+                            $transaction->commit();
 
-            } else {
-                return $this->render('create', [
-                    'model' => $model,
-                    'designations' => Designation::getListDesignation(),
-                ]);
+                            Yii::$app->session->setFlash('success', [
+                                Yii::t('app', 'Your account has been saved.'),
+                            ]);
+                            return $this->refresh();
+                        }
+                    }
+                } catch(\Exception $e) {
+                    $transaction->rollBack();
+                    throw $e;
+                }
             }
+            return $this->render('create', [
+                'faculty' => $faculty,
+                'education' => $education,
+                'designations' => Designation::getListDesignation(),
+            ]);
         }
     }
 

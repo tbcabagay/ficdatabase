@@ -33,6 +33,9 @@ class Faculty extends \yii\db\ActiveRecord
 {
     private static $_listFaculty;
 
+    public $plain_password;
+    public $confirm_password;
+
     const STATUS_ACTIVE = 10;
     const STATUS_DELETE = 20;
     /**
@@ -64,12 +67,14 @@ class Faculty extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['first_name', 'last_name', 'middle_name', 'designation_id', 'email', 'birthday', 'tin_number', 'nationality', 'status'], 'required'],
+            [['first_name', 'last_name', 'middle_name', 'designation_id', 'email', 'plain_password', 'birthday', 'tin_number', 'nationality', 'status'], 'required'],
             [['designation_id', 'status'], 'integer'],
+            ['confirm_password', 'compare', 'compareAttribute' => 'plain_password', 'skipOnEmpty' => false, 'message' => "Passwords don't match"],
             [['email'], 'email'],
             [['email'], 'unique'],
-            [['email'], 'validateEmailDomain'],
-            [['birthday', 'created_at', 'updated_at'], 'safe'],
+            /*[['email'], 'validateEmailDomain'],*/
+            [['birthday'], 'date', 'format' => 'php:Y-m-d'],
+            [['created_at', 'updated_at'], 'safe'],
             [['first_name', 'last_name', 'middle_name', 'tin_number'], 'string', 'max' => 50],
             [['email', 'nationality'], 'string', 'max' => 150],
             [['password'], 'string', 'max' => 60],
@@ -96,6 +101,8 @@ class Faculty extends \yii\db\ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'plain_password' => Yii::t('app', 'Password'),
+            'confirm_password' => Yii::t('app', 'Confirm Password'),
         ];
     }
 
@@ -152,6 +159,7 @@ class Faculty extends \yii\db\ActiveRecord
     public function add()
     {
         if ($this->isNewRecord) {
+            $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->plain_password);
             $this->status = self::STATUS_ACTIVE;
             $this->created_at = new Expression('NOW()');
 
