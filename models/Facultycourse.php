@@ -7,7 +7,6 @@ use Yii;
 /**
  * This is the model class for table "{{%facultycourse}}".
  *
- * @property integer $id
  * @property integer $faculty_id
  * @property integer $course_id
  *

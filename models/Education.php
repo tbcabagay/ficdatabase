@@ -17,6 +17,15 @@ use Yii;
  */
 class Education extends \yii\db\ActiveRecord
 {
+    const SCENARIO_SITE_CREATE = 'site_create';
+
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_SITE_CREATE] = ['degree', 'school', 'date_graduate'];
+        return $scenarios;
+    }
+
     /**
      * @inheritdoc
      */

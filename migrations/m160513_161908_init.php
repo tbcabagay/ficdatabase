@@ -43,6 +43,7 @@ class m160513_161908_init extends Migration
         /* Faculty table */
         $this->createTable('{{%faculty}}', [
             'id' => $this->primaryKey(),
+            'auth_key' => $this->string(32)->notNull(),
             'first_name' => $this->string(50)->notNull(),
             'last_name' => $this->string(50)->notNull(),
             'middle_name' => $this->string(50)->notNull(),

@@ -55,3 +55,21 @@ $session = Yii::$app->getSession();
         'body' => $session->getFlash('error'),
     ]);
 } ?>
+
+<?php if ($session->has('confirm_success')) {
+    echo Growl::widget([
+        'type' => Growl::TYPE_SUCCESS,
+        'icon' => 'glyphicon glyphicon-ok-sign',
+        'title' => 'Success!',
+        'body' => $session->getFlash('confirm_success'),
+    ]);
+} ?>
+
+<?php if ($session->has('confirm_error')) {
+    echo Growl::widget([
+        'type' => Growl::TYPE_DANGER,
+        'icon' => 'glyphicon glyphicon-exclamation-sign',
+        'title' => 'Error!',
+        'body' => $session->getFlash('confirm_error'),
+    ]);
+} ?>

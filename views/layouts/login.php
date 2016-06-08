@@ -24,7 +24,7 @@ LteIE9Asset::register($this);
     <?php $this->head() ?>
     <style>
         html {
-            background: url('/images/background.jpg') no-repeat center center fixed; 
+            background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), rgba(0,0,0,0.55) url('/images/background.jpg') no-repeat center center fixed; 
             -webkit-background-size: cover;
             -moz-background-size: cover;
             -o-background-size: cover;

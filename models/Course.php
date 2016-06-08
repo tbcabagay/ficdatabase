@@ -15,7 +15,6 @@ use yii\helpers\ArrayHelper;
  *
  * @property Program $program
  * @property Facultycourse[] $facultycourses
- * @property Notice[] $notices
  * @property Storage[] $storages
  */
 class Course extends \yii\db\ActiveRecord
@@ -71,14 +70,6 @@ class Course extends \yii\db\ActiveRecord
     public function getFacultycourses()
     {
         return $this->hasMany(Facultycourse::className(), ['course_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getNotices()
-    {
-        return $this->hasMany(Notice::className(), ['course_id' => 'id']);
     }
 
     /**

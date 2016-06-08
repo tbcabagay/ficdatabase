@@ -22,7 +22,6 @@ use yii\behaviors\BlameableBehavior;
  * @property string $date_submission
  * @property string $reference_number
  *
- * @property Faculty $faculty
  * @property Template $template
  * @property Faculty $faculty
  * @property User $user
@@ -105,17 +104,17 @@ class Notice extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getFaculty()
+    public function getTemplate()
     {
-        return $this->hasOne(Faculty::className(), ['id' => 'faculty_id']);
+        return $this->hasOne(Template::className(), ['id' => 'template_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTemplate()
+    public function getFaculty()
     {
-        return $this->hasOne(Template::className(), ['id' => 'template_id']);
+        return $this->hasOne(Faculty::className(), ['id' => 'faculty_id']);
     }
 
     /**

@@ -11,6 +11,7 @@ use app\models\LoginForm;
 use app\models\Faculty;
 use app\models\Designation;
 use app\models\Education;
+use yii\web\NotFoundHttpException;
 
 class SiteController extends Controller
 {
@@ -91,24 +92,36 @@ class SiteController extends Controller
             $faculty = new Faculty();
             $education = new Education();
 
-            if ($faculty->load(Yii::$app->request->post()) && $education->load(Yii::$app->request->post())) {
-                $transaction = $faculty->getDb()->beginTransaction();
-                try {
-                    if ($faculty->add()) {
-                        $faculty->refresh();
-                        $education->faculty_id = $faculty->id;
-                        if ($education->save()) {
-                            $transaction->commit();
+            $faculty->scenario = Faculty::SCENARIO_SITE_CREATE;
+            $education->scenario = Faculty::SCENARIO_SITE_CREATE;
 
-                            Yii::$app->session->setFlash('success', [
-                                Yii::t('app', 'Your account has been saved.'),
-                            ]);
-                            return $this->refresh();
+            if ($faculty->load(Yii::$app->request->post()) && $education->load(Yii::$app->request->post())) {
+                $isValid = $faculty->validate();
+                $isValid = $education->validate() && $isValid;
+                if ($isValid) {
+                    $transaction = $faculty->getDb()->beginTransaction();
+                    try {
+                        if ($faculty->add()) {
+                            $faculty->refresh();
+                            $education->faculty_id = $faculty->id;
+                            if ($education->save(false)) {
+                                $transaction->commit();
+
+                                if (Yii::$app->params['confirmEmail']) {
+                                    $faculty->confirmEmail();
+                                    $message = Yii::t('app', 'Your account has been saved. Please check your email for confirmation link to complete your registration');
+                                } else {
+                                    $message = Yii::t('app', 'Your account has been saved.');
+                                }
+
+                                Yii::$app->session->setFlash('success', $message);
+                                return $this->refresh();
+                            }
                         }
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
                     }
-                } catch(\Exception $e) {
-                    $transaction->rollBack();
-                    throw $e;
                 }
             }
             return $this->render('create', [
@@ -116,6 +129,26 @@ class SiteController extends Controller
                 'education' => $education,
                 'designations' => Designation::getListDesignation(),
             ]);
+        }
+    }
+
+    public function actionConfirm($id, $code)
+    {
+        $model = Faculty::find()->where([
+            'id' => $id,
+            'auth_key' => $code,
+            'status' => Faculty::STATUS_NEW,
+        ])->one();
+        if ($model !== null) {
+            $model->status = Faculty::STATUS_ACTIVE;
+            if ($model->save()) {
+                Yii::$app->session->setFlash('confirm_success', Yii::t('app', 'You have successfully confirmed your email address. You may sign in using your credentials now.'));
+            } else {
+                Yii::$app->session->setFlash('confirm_error', Yii::t('app', 'There seems to be a problem activating your account. Please contact the site administrator.'));
+            }
+            $this->redirect(['login']);
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
 

@@ -21,8 +21,7 @@ use yii\behaviors\BlameableBehavior;
  *
  * @property Notice[] $notices
  * @property User $user
- * @property Notice[] $notices
- */
+  */
 class Template extends \yii\db\ActiveRecord
 {
     private static $_listTemplate;
