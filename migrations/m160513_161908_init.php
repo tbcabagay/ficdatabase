@@ -11,8 +11,10 @@ class m160513_161908_init extends Migration
             'id' => $this->primaryKey(),
             'auth_key' => $this->string(32)->notNull(),
             'email' => $this->string(255)->notNull(),
+            'password' => $this->string(),
             'status' => $this->smallInteger()->notNull(),
-            'office_id' => $this->integer()->notNull(),
+            'faculty_id' => $this->integer(),
+            'office_id' => $this->integer(),
             'created_at' => $this->dateTime()->notNull(),
             'updated_at' => $this->dateTime(),
         ]);
@@ -43,13 +45,10 @@ class m160513_161908_init extends Migration
         /* Faculty table */
         $this->createTable('{{%faculty}}', [
             'id' => $this->primaryKey(),
-            'auth_key' => $this->string(32)->notNull(),
             'first_name' => $this->string(50)->notNull(),
             'last_name' => $this->string(50)->notNull(),
             'middle_name' => $this->string(50)->notNull(),
             'designation_id' => $this->integer()->notNull(),
-            'email' => $this->string(150)->notNull(),
-            'password' => $this->char(60),
             'birthday' => $this->date()->notNull(),
             'tin_number' => $this->string(50)->notNull(),
             'nationality' => $this->string(150)->notNull(),
@@ -124,6 +123,7 @@ class m160513_161908_init extends Migration
             'updated_at' => $this->dateTime(),
         ]);
 
+        $this->addForeignKey('fk-user-faculty_id-faculty-id', '{{%user}}', 'faculty_id', '{{%faculty}}', 'id', 'RESTRICT', 'CASCADE');
         $this->addForeignKey('fk-user-office_id-office-id', '{{%user}}', 'office_id', '{{%office}}', 'id', 'RESTRICT', 'CASCADE');
         $this->addForeignKey('fk-auth-user_id-user-id', '{{%auth}}', 'user_id', '{{%user}}', 'id', 'RESTRICT', 'CASCADE');
         $this->addForeignKey('fk-faculty-designation_id-designation-id', '{{%faculty}}', 'designation_id', '{{%designation}}', 'id', 'RESTRICT', 'CASCADE');
@@ -143,6 +143,7 @@ class m160513_161908_init extends Migration
 
     public function down()
     {
+        $this->dropForeignKey('fk-user-faculty_id-faculty-id', '{{%user}}');
         $this->dropForeignKey('fk-auth-user_id-user-id', '{{%auth}}');
         $this->dropForeignKey('fk-user-office_id-office-id', '{{%user}}');
         $this->dropForeignKey('fk-faculty-designation_id-designation-id', '{{%faculty}}');

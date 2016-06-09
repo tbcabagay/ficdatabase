@@ -50,7 +50,8 @@ $session = Yii::$app->getSession();
 
 <?php if ($session->has('error')) {
     echo Growl::widget([
-        'type' => Growl::TYPE_GROWL,
+        'type' => Growl::TYPE_DANGER,
+        'icon' => 'glyphicon glyphicon-exclamation-sign',
         'title' => 'Error!',
         'body' => $session->getFlash('error'),
     ]);

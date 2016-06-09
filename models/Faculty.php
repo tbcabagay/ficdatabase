@@ -5,20 +5,16 @@ namespace app\models;
 use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
 use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%faculty}}".
  *
  * @property integer $id
- * @property string $auth_key
  * @property string $first_name
  * @property string $last_name
  * @property string $middle_name
  * @property integer $designation_id
- * @property string $email
- * @property string $password
  * @property string $birthday
  * @property string $tin_number
  * @property string $nationality
@@ -30,12 +26,11 @@ use yii\behaviors\TimestampBehavior;
  * @property Designation $designation
  * @property Facultycourse[] $facultycourses
  * @property Notice[] $notices
+ * @property User[] $users
  */
 class Faculty extends \yii\db\ActiveRecord
 {
     private static $_listFaculty;
-
-    public $confirm_password;
 
     const SCENARIO_SITE_CREATE = 'site_create';
     const STATUS_NEW = 10;
@@ -45,7 +40,7 @@ class Faculty extends \yii\db\ActiveRecord
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_SITE_CREATE] = ['first_name', 'middle_name', 'last_name', 'designation_id', 'email', 'password', 'confirm_password', 'birthday', 'tin_number', 'nationality'];
+        $scenarios[self::SCENARIO_SITE_CREATE] = ['first_name', 'middle_name', 'last_name', 'designation_id', 'birthday', 'tin_number', 'nationality'];
         return $scenarios;
     }
 
@@ -78,17 +73,12 @@ class Faculty extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['auth_key', 'first_name', 'last_name', 'middle_name', 'designation_id', 'email', 'password', 'birthday', 'tin_number', 'nationality', 'status'], 'required'],
+            [['first_name', 'last_name', 'middle_name', 'designation_id', 'birthday', 'tin_number', 'nationality', 'status'], 'required'],
             [['designation_id', 'status'], 'integer'],
-            ['confirm_password', 'compare', 'compareAttribute' => 'password', 'skipOnEmpty' => false, 'message' => 'Passwords don\'t match', 'on' => self::SCENARIO_SITE_CREATE],
-            [['email'], 'email'],
-            [['email'], 'unique'],
-            /*[['email'], 'validateEmailDomain'],*/
             [['birthday'], 'date', 'format' => 'php:Y-m-d'],
             [['created_at', 'updated_at'], 'safe'],
             [['first_name', 'last_name', 'middle_name', 'tin_number'], 'string', 'max' => 50],
-            [['email', 'nationality'], 'string', 'max' => 150],
-            [['password'], 'string', 'max' => 60],
+            [['nationality'], 'string', 'max' => 150],
             [['designation_id'], 'exist', 'skipOnError' => true, 'targetClass' => Designation::className(), 'targetAttribute' => ['designation_id' => 'id']],
         ];
     }
@@ -100,21 +90,16 @@ class Faculty extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'auth_key' => Yii::t('app', 'Auth Key'),
             'first_name' => Yii::t('app', 'First Name'),
             'last_name' => Yii::t('app', 'Last Name'),
             'middle_name' => Yii::t('app', 'Middle Name'),
             'designation_id' => Yii::t('app', 'Designation'),
-            'email' => Yii::t('app', 'Email'),
-            'password' => Yii::t('app', 'Password'),
             'birthday' => Yii::t('app', 'Birthday'),
             'tin_number' => Yii::t('app', 'TIN Number'),
             'nationality' => Yii::t('app', 'Nationality'),
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
-            'plain_password' => Yii::t('app', 'Password'),
-            'confirm_password' => Yii::t('app', 'Confirm Password'),
         ];
     }
 
@@ -150,12 +135,12 @@ class Faculty extends \yii\db\ActiveRecord
         return $this->hasMany(Notice::className(), ['faculty_id' => 'id']);
     }
 
-    public function validateEmailDomain($attribute, $params)
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsers()
     {
-        list($user, $domain) = split('@', $this->$attribute);
-        if ($domain !== Yii::$app->params['allowedDomain']) {
-            $this->addError($attribute, Yii::t('app', 'The email must be {allowedDomain} only.', ['allowedDomain' => Yii::$app->params['allowedDomain']]));
-        }
+        return $this->hasMany(User::className(), ['faculty_id' => 'id']);
     }
 
     public function getName()
@@ -171,9 +156,7 @@ class Faculty extends \yii\db\ActiveRecord
     public function add()
     {
         if ($this->isNewRecord) {
-            $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
-            $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
-            $this->status = self::STATUS_NEW;
+            $this->status = self::STATUS_ACTIVE;
             $this->created_at = new Expression('NOW()');
 
             if ($this->save(false)) {
@@ -192,19 +175,5 @@ class Faculty extends \yii\db\ActiveRecord
             }
         );
         return self::$_listFaculty;
-    }
-
-    public function confirmEmail()
-    {
-        $absoluteConfirmLink = Yii::$app->urlManager->createAbsoluteUrl(['site/confirm', 'id' => $this->id, 'code' => $this->auth_key]);
-        $body = '<p>Hello ' . $this->designationName . ',</p>';
-        $body .= '<p>In order to complete your registration, please click the link below</p>';
-        $body .= '<p>' . Html::a($absoluteConfirmLink, $absoluteConfirmLink) . '</p>';
-        Yii::$app->mailer->compose()
-            ->setTo($this->email)
-            ->setFrom(Yii::$app->params['adminEmail'])
-            ->setSubject('FIC Database Email Confirmation')
-            ->setHtmlBody($body)
-            ->send();
     }
 }

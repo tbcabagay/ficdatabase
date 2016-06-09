@@ -79,11 +79,11 @@ $session = Yii::$app->getSession();
                 <fieldset>
                     <legend>Account Information</legend>
 
-                    <?= $form->field($faculty, 'email')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($user, 'email')->textInput(['maxlength' => true]) ?>
 
-                    <?= $form->field($faculty, 'password')->passwordInput(['maxlength' => true]) ?>
+                    <?= $form->field($user, 'password')->passwordInput(['maxlength' => true]) ?>
 
-                    <?= $form->field($faculty, 'confirm_password')->passwordInput(['maxlength' => true]) ?>
+                    <?= $form->field($user, 'confirm_password')->passwordInput(['maxlength' => true]) ?>
                 </fieldset>
 
                 <div class="form-group">

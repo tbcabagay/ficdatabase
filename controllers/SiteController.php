@@ -9,6 +9,7 @@ use yii\filters\VerbFilter;
 use app\components\AuthHandler;
 use app\models\LoginForm;
 use app\models\Faculty;
+use app\models\User;
 use app\models\Designation;
 use app\models\Education;
 use yii\web\NotFoundHttpException;
@@ -78,6 +79,10 @@ class SiteController extends Controller
         } else {
             $model = new LoginForm();
 
+            if ($model->load(Yii::$app->request->post()) && $model->login()) {
+                return $this->redirect(['/main/default/index']);
+            }
+
             return $this->render('login', [
                 'model' => $model,
             ]);
@@ -89,26 +94,30 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->redirect(['/main/default/index']);
         } else {
+            $user = new User();
             $faculty = new Faculty();
             $education = new Education();
 
+            $user->scenario = Faculty::SCENARIO_SITE_CREATE;
             $faculty->scenario = Faculty::SCENARIO_SITE_CREATE;
             $education->scenario = Faculty::SCENARIO_SITE_CREATE;
 
-            if ($faculty->load(Yii::$app->request->post()) && $education->load(Yii::$app->request->post())) {
-                $isValid = $faculty->validate();
+            if ($user->load(Yii::$app->request->post()) && $faculty->load(Yii::$app->request->post()) && $education->load(Yii::$app->request->post())) {
+                $isValid = $user->validate();
+                $isValid = $faculty->validate() && $isValid;
                 $isValid = $education->validate() && $isValid;
                 if ($isValid) {
                     $transaction = $faculty->getDb()->beginTransaction();
                     try {
                         if ($faculty->add()) {
                             $faculty->refresh();
+                            $user->faculty_id = $faculty->id;
                             $education->faculty_id = $faculty->id;
-                            if ($education->save(false)) {
+                            if ($education->save(false) && $user->add()) {
                                 $transaction->commit();
 
                                 if (Yii::$app->params['confirmEmail']) {
-                                    $faculty->confirmEmail();
+                                    $user->confirmEmail();
                                     $message = Yii::t('app', 'Your account has been saved. Please check your email for confirmation link to complete your registration');
                                 } else {
                                     $message = Yii::t('app', 'Your account has been saved.');
@@ -125,6 +134,7 @@ class SiteController extends Controller
                 }
             }
             return $this->render('create', [
+                'user' => $user,
                 'faculty' => $faculty,
                 'education' => $education,
                 'designations' => Designation::getListDesignation(),
@@ -134,13 +144,13 @@ class SiteController extends Controller
 
     public function actionConfirm($id, $code)
     {
-        $model = Faculty::find()->where([
+        $model = User::find()->where([
             'id' => $id,
             'auth_key' => $code,
-            'status' => Faculty::STATUS_NEW,
+            'status' => User::STATUS_NEW,
         ])->one();
         if ($model !== null) {
-            $model->status = Faculty::STATUS_ACTIVE;
+            $model->status = User::STATUS_ACTIVE;
             if ($model->save()) {
                 Yii::$app->session->setFlash('confirm_success', Yii::t('app', 'You have successfully confirmed your email address. You may sign in using your credentials now.'));
             } else {
