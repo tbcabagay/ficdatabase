@@ -19,7 +19,7 @@ class FacultySearch extends Faculty
     {
         return [
             [['id', 'designation_id', 'status'], 'integer'],
-            [['first_name', 'last_name', 'middle_name', 'email', 'password', 'birthday', 'tin_number', 'nationality', 'created_at', 'updated_at'], 'safe'],
+            [['first_name', 'last_name', 'middle_name', 'birthday', 'tin_number', 'nationality', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -70,8 +70,6 @@ class FacultySearch extends Faculty
         $query->andFilterWhere(['like', 'first_name', $this->first_name])
             ->andFilterWhere(['like', 'last_name', $this->last_name])
             ->andFilterWhere(['like', 'middle_name', $this->middle_name])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'password', $this->password])
             ->andFilterWhere(['like', 'tin_number', $this->tin_number])
             ->andFilterWhere(['like', 'nationality', $this->nationality]);
 

@@ -26,11 +26,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
 
-                    [
-                        'attribute' => 'user_id',
-                        'value' => 'user.email',
-                        'format' => 'email',
-                    ],
                     'name',
                     [
                         'attribute' => 'content',
@@ -40,6 +35,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         'format' => 'raw',
                         'hAlign' => 'center',
                         'filter' => false,
+                    ],
+                    [
+                        'attribute' => 'user_id',
+                        'value' => 'user.email',
+                        'format' => 'email',
+                        'label' => 'Uploaded by',
                     ],
                     'created_at',
                     'updated_at',

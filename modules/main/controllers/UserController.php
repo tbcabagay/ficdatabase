@@ -64,8 +64,9 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new User();
+        $model->scenario = User::SCENARIO_USER_CREATE;
 
-        if ($model->load(Yii::$app->request->post()) && $model->add()) {
+        if ($model->load(Yii::$app->request->post()) && $model->userCreate()) {
             return $this->redirect(['index']);
         } else {
             return $this->render('create', [

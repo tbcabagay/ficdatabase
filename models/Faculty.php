@@ -14,6 +14,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $first_name
  * @property string $last_name
  * @property string $middle_name
+ * @property string $email
  * @property integer $designation_id
  * @property string $birthday
  * @property string $tin_number
@@ -33,7 +34,6 @@ class Faculty extends \yii\db\ActiveRecord
     private static $_listFaculty;
 
     const SCENARIO_SITE_CREATE = 'site_create';
-    const STATUS_NEW = 10;
     const STATUS_ACTIVE = 20;
     const STATUS_DELETE = 30;
 
@@ -73,11 +73,12 @@ class Faculty extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['first_name', 'last_name', 'middle_name', 'designation_id', 'birthday', 'tin_number', 'nationality', 'status'], 'required'],
+            [['first_name', 'last_name', 'middle_name', 'email', 'designation_id', 'birthday', 'tin_number', 'nationality', 'status'], 'required'],
             [['designation_id', 'status'], 'integer'],
             [['birthday'], 'date', 'format' => 'php:Y-m-d'],
             [['created_at', 'updated_at'], 'safe'],
             [['first_name', 'last_name', 'middle_name', 'tin_number'], 'string', 'max' => 50],
+            [['email'], 'string', 'max' => 255],
             [['nationality'], 'string', 'max' => 150],
             [['designation_id'], 'exist', 'skipOnError' => true, 'targetClass' => Designation::className(), 'targetAttribute' => ['designation_id' => 'id']],
         ];
@@ -94,6 +95,7 @@ class Faculty extends \yii\db\ActiveRecord
             'last_name' => Yii::t('app', 'Last Name'),
             'middle_name' => Yii::t('app', 'Middle Name'),
             'designation_id' => Yii::t('app', 'Designation'),
+            'email' => Yii::t('app', 'Email'),
             'birthday' => Yii::t('app', 'Birthday'),
             'tin_number' => Yii::t('app', 'TIN Number'),
             'nationality' => Yii::t('app', 'Nationality'),

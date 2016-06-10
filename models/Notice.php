@@ -6,6 +6,7 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use yii\db\Expression;
 use kartik\mpdf\Pdf;
+use yii\helpers\Html;
 use yii\behaviors\BlameableBehavior;
 
 /**
@@ -90,8 +91,8 @@ class Notice extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'user_id' => Yii::t('app', 'User ID'),
-            'faculty_id' => Yii::t('app', 'Faculty ID'),
-            'template_id' => Yii::t('app', 'Template ID'),
+            'faculty_id' => Yii::t('app', 'Faculty'),
+            'template_id' => Yii::t('app', 'Template'),
             'semester' => Yii::t('app', 'Semester'),
             'academic_year' => Yii::t('app', 'Academic Year'),
             'date_course_start' => Yii::t('app', 'Date Course Start'),
@@ -173,6 +174,7 @@ class Notice extends \yii\db\ActiveRecord
                                 ]);
                                 if ($this->_storage->save()) {
                                     $this->_createNotice();
+                                    $this->_emailNotice();
                                 }
                             }
                         }
@@ -216,6 +218,24 @@ class Notice extends \yii\db\ActiveRecord
         $pdf->filename = $this->_storage->location;
         $pdf->content = $content;
         $pdf->render();
+    }
+
+    private function _emailNotice()
+    {
+        $faculty = $this->_faculty;
+        $storage = $this->_storage;
+
+        $absoluteConfirmLink = Yii::$app->urlManager->createAbsoluteUrl(['site/confirm']);
+        $body = '<p>Hello ' . $faculty->designationName . ',</p>';
+        $body .= '<p>In order to complete your registration, please click the link below</p>';
+        $body .= '<p>' . Html::a($absoluteConfirmLink, $absoluteConfirmLink) . '</p>';
+        Yii::$app->mailer->compose()
+            ->setTo($faculty->email)
+            ->setFrom(Yii::$app->params['adminEmail'])
+            ->setSubject('FIC Database Email Confirmation')
+            ->setHtmlBody($body)
+            ->attach($storage->location)
+            ->send();
     }
 
     public function getPdf()

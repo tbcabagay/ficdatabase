@@ -15,6 +15,7 @@ use yii\helpers\Html;
  * @property string $auth_key
  * @property string $email
  * @property string $password
+ * @property integer $role
  * @property integer $status
  * @property integer $faculty_id
  * @property integer $office_id
@@ -33,6 +34,9 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     const STATUS_ACTIVE = 20;
     const STATUS_DELETE = 30;
     const SCENARIO_SITE_CREATE = 'site_create';
+    const SCENARIO_USER_CREATE = 'user_create';
+    const ROLE_FACULTY = 10;
+    const ROLE_USER = 20;
 
     private static $_status;
 
@@ -42,6 +46,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_SITE_CREATE] = ['email', 'password', 'confirm_password'];
+        $scenarios[self::SCENARIO_USER_CREATE] = ['email', 'office_id'];
         return $scenarios;
     }
 
@@ -74,9 +79,9 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['auth_key', 'email', 'status'], 'required'],
-            ['password', 'required', 'on' => self::SCENARIO_SITE_CREATE],
-            [['status', 'faculty_id', 'office_id'], 'integer'],
+            [['auth_key', 'email', 'office_id', 'role', 'status'], 'required'],
+            [['password'], 'required', 'on' => self::SCENARIO_SITE_CREATE],
+            [['role', 'status', 'faculty_id', 'office_id'], 'integer'],
             [['email'], 'email'],
             [['email'], 'unique'],
             /*[['email'], 'validateEmailDomain'],*/
@@ -99,6 +104,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'auth_key' => Yii::t('app', 'Auth Key'),
             'email' => Yii::t('app', 'Email'),
             'password' => Yii::t('app', 'Password'),
+            'role' => Yii::t('app', 'Role'),
             'status' => Yii::t('app', 'Status'),
             'faculty_id' => Yii::t('app', 'Faculty ID'),
             'office_id' => Yii::t('app', 'Office ID'),
@@ -202,14 +208,26 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         }
     }
 
-    public function add()
+    public function siteCreate()
     {
         if ($this->isNewRecord) {
             $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
             $this->auth_key = \Yii::$app->security->generateRandomString();
-            $this->status = self::STATUS_NEW;
 
             if ($this->save(false)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function userCreate()
+    {
+        if ($this->isNewRecord) {
+            $this->role = self::ROLE_USER;
+            $this->status = self::STATUS_ACTIVE;
+
+            if ($this->save()) {
                 return true;
             }
         }

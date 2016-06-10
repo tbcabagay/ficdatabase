@@ -35,6 +35,7 @@ class AuthHandler
         
         $user = User::find()->where([
             'email' => $email,
+            'status' => User::STATUS_ACTIVE,
         ])->limit(1)->one();
 
         if (Yii::$app->user->isGuest) {

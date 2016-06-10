@@ -18,8 +18,8 @@ class TemplateSearch extends Template
     public function rules()
     {
         return [
-            [['id', 'user_id'], 'integer'],
-            [['name', 'content', 'created_at', 'updated_at'], 'safe'],
+            [['id'], 'integer'],
+            [['name', 'content', 'user_id', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -42,6 +42,7 @@ class TemplateSearch extends Template
     public function search($params)
     {
         $query = Template::find();
+        $query->joinWith(['user']);
 
         // add conditions that should always apply here
 
@@ -60,13 +61,14 @@ class TemplateSearch extends Template
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            /*'user_id' => $this->user_id,*/
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'content', $this->content]);
+            ->andFilterWhere(['like', 'content', $this->content])
+            ->andFilterWhere(['like', 'user.email', $this->user_id]);
 
         return $dataProvider;
     }

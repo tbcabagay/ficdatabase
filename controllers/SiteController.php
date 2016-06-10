@@ -103,6 +103,10 @@ class SiteController extends Controller
             $education->scenario = Faculty::SCENARIO_SITE_CREATE;
 
             if ($user->load(Yii::$app->request->post()) && $faculty->load(Yii::$app->request->post()) && $education->load(Yii::$app->request->post())) {
+                $user->role = User::ROLE_FACULTY;
+                $user->status = User::STATUS_NEW;
+                $faculty->email = $user->email;
+
                 $isValid = $user->validate();
                 $isValid = $faculty->validate() && $isValid;
                 $isValid = $education->validate() && $isValid;
@@ -113,7 +117,7 @@ class SiteController extends Controller
                             $faculty->refresh();
                             $user->faculty_id = $faculty->id;
                             $education->faculty_id = $faculty->id;
-                            if ($education->save(false) && $user->add()) {
+                            if ($education->save(false) && $user->siteCreate()) {
                                 $transaction->commit();
 
                                 if (Yii::$app->params['confirmEmail']) {

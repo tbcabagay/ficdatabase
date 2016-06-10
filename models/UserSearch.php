@@ -18,8 +18,8 @@ class UserSearch extends User
     public function rules()
     {
         return [
-            [['id', 'status', 'office_id'], 'integer'],
-            [['auth_key', 'email', 'created_at', 'updated_at'], 'safe'],
+            [['id', 'role', 'status', 'faculty_id', 'office_id'], 'integer'],
+            [['auth_key', 'email', 'password', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -42,6 +42,7 @@ class UserSearch extends User
     public function search($params)
     {
         $query = User::find();
+        $query->where(['role' => User::ROLE_USER]);
 
         // add conditions that should always apply here
 
@@ -60,14 +61,17 @@ class UserSearch extends User
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'role' => $this->role,
             'status' => $this->status,
+            'faculty_id' => $this->faculty_id,
             'office_id' => $this->office_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
 
         $query->andFilterWhere(['like', 'auth_key', $this->auth_key])
-            ->andFilterWhere(['like', 'email', $this->email]);
+            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'password', $this->password]);
 
         return $dataProvider;
     }
