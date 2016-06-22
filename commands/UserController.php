@@ -21,4 +21,9 @@ class UserController extends Controller
         echo "done...\n";
         return 0;
     }
+
+    public function actionCreateAdmin()
+    {
+        
+    }
 }

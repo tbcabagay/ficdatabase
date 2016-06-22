@@ -79,7 +79,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['auth_key', 'email', 'office_id', 'role', 'status'], 'required'],
+            [['auth_key', 'email', /*'office_id',*/ 'role', 'status'], 'required'],
             [['password'], 'required', 'on' => self::SCENARIO_SITE_CREATE],
             [['role', 'status', 'faculty_id', 'office_id'], 'integer'],
             [['email'], 'email'],
